@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Lasso\VmailBundle\Entity\Domain" table="domain">
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Lasso\VmailBundle\Entity\Domain" table="domain" repository-class="Lasso\VmailBundle\Repository\DomainRepository">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
@@ -8,12 +8,14 @@
     <field name="description" type="string" column="description" length="255" nullable="false"/>
     <field name="aliases" type="integer" column="aliases" nullable="false"/>
     <field name="mailboxes" type="integer" column="mailboxes" nullable="false"/>
-    <field name="maxquota" type="bigint" column="maxquota" nullable="false"/>
+    <field name="maxQuota" type="bigint" column="max_quota" nullable="false"/>
     <field name="quota" type="bigint" column="quota" nullable="false"/>
-    <field name="transport" type="string" column="transport" length="255" nullable="false"/>
-    <field name="backupmx" type="boolean" column="backupmx" nullable="false"/>
-    <field name="created" type="datetime" column="created" nullable="false"/>
-    <field name="modified" type="datetime" column="modified" nullable="false"/>
+      <field name="created" type="datetime" column="created">
+          <gedmo:timestampable on="create"/>
+      </field>
+      <field name="modified" type="datetime" column="modified">
+          <gedmo:timestampable on="update"/>
+      </field>
     <field name="active" type="boolean" column="active" nullable="false"/>
   </entity>
 </doctrine-mapping>

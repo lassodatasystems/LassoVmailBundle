@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Lasso\VmailBundle\Entity\Email" table="email">
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Lasso\VmailBundle\Entity\Email" table="email" repository-class="Lasso\VmailBundle\Repository\EmailRepository">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="email" type="string" column="email" length="255" nullable="false"/>
     <field name="localPart" type="string" column="local_part" length="255" nullable="false"/>
-    <field name="created" type="datetime" column="created" nullable="false"/>
-    <field name="modified" type="datetime" column="modified" nullable="false"/>
+      <field name="created" type="datetime" column="created">
+          <gedmo:timestampable on="create"/>
+      </field>
+      <field name="modified" type="datetime" column="modified">
+          <gedmo:timestampable on="update"/>
+      </field>
     <many-to-one field="domain" target-entity="Domain">
+      <cascade>
+        <cascade-persist/>
+      </cascade>
       <join-columns>
         <join-column name="domain" referenced-column-name="id"/>
       </join-columns>

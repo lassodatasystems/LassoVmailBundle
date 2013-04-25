@@ -9,15 +9,7 @@ use Exception;
  */
 class VmailException extends Exception
 {
-    /**
-     * @param $username
-     *
-     * @return VmailException
-     */
-    public static function invalidUsername($username)
-    {
-        return new self("Username: {$username} is not valid");
-    }
+    const ERROR_EMAIL_EXISTS = 1;
 
     /**
      * @param $email
@@ -26,16 +18,6 @@ class VmailException extends Exception
      */
     public static function emailExists($email)
     {
-        return new self("Unable to create mailbox: {$email}, emails or alias already in use.");
-    }
-
-    /**
-     * @param $hash
-     *
-     * @return VmailException
-     */
-    public static function invalidPasswordHash($hash)
-    {
-        return new self("Password Hash: {$hash} is not valid for this system.");
+        return new self("Unable to create mailbox: {$email}, emails or alias already in use.", self::ERROR_EMAIL_EXISTS);
     }
 }

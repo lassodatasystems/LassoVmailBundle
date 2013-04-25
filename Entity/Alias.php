@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,19 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
 class Alias
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $modified;
 
     /**
      * @var boolean
      */
-    private $active;
+    private $active = 1;
 
     /**
      * @var integer
@@ -30,33 +31,33 @@ class Alias
     private $id;
 
     /**
-     * @var \Lasso\VmailBundle\Entity\Email
+     * @var Email
      */
     private $destination;
 
     /**
-     * @var \Lasso\VmailBundle\Entity\Email
+     * @var Email
      */
     private $source;
-
 
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
+     *
      * @return Alias
      */
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -66,20 +67,21 @@ class Alias
     /**
      * Set modified
      *
-     * @param \DateTime $modified
+     * @param DateTime $modified
+     *
      * @return Alias
      */
     public function setModified($modified)
     {
         $this->modified = $modified;
-    
+
         return $this;
     }
 
     /**
      * Get modified
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getModified()
     {
@@ -90,19 +92,20 @@ class Alias
      * Set active
      *
      * @param boolean $active
+     *
      * @return Alias
      */
     public function setActive($active)
     {
         $this->active = $active;
-    
+
         return $this;
     }
 
     /**
      * Get active
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getActive()
     {
@@ -112,7 +115,7 @@ class Alias
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -122,20 +125,21 @@ class Alias
     /**
      * Set destination
      *
-     * @param \Lasso\VmailBundle\Entity\Email $destination
+     * @param Email $destination
+     *
      * @return Alias
      */
-    public function setDestination(\Lasso\VmailBundle\Entity\Email $destination = null)
+    public function setDestination(Email $destination = null)
     {
         $this->destination = $destination;
-    
+
         return $this;
     }
 
     /**
      * Get destination
      *
-     * @return \Lasso\VmailBundle\Entity\Email 
+     * @return Email
      */
     public function getDestination()
     {
@@ -145,20 +149,21 @@ class Alias
     /**
      * Set source
      *
-     * @param \Lasso\VmailBundle\Entity\Email $source
+     * @param Email $source
+     *
      * @return Alias
      */
-    public function setSource(\Lasso\VmailBundle\Entity\Email $source = null)
+    public function setSource(Email $source = null)
     {
         $this->source = $source;
-    
+
         return $this;
     }
 
     /**
      * Get source
      *
-     * @return \Lasso\VmailBundle\Entity\Email 
+     * @return Email
      */
     public function getSource()
     {

@@ -18,12 +18,13 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('lasso_vmail')
-        ->children()
-        ->scalarNode('quota')->defaultValue('536870912')->end()
-        ->scalarNode('mailbox_format')->defaultValue('Maildir')->end()
-        ->scalarNode('entity_manager_name')->defaultValue('vmail')->end()
-        ->end();
+        $rootNode    = $treeBuilder->root('lasso_vmail')
+            ->children()
+            ->scalarNode('default_quota')->end()
+            ->scalarNode('root_mail_dir')->end()
+            ->scalarNode('mailbox_format')->defaultValue('Maildir')->end()
+            ->scalarNode('entity_manager_name')->defaultValue('vmail')->end()
+            ->end();
 
         return $treeBuilder;
     }

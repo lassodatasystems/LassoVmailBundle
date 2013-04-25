@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,12 +21,12 @@ class Email
     private $localPart;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $modified;
 
@@ -35,28 +36,28 @@ class Email
     private $id;
 
     /**
-     * @var \Lasso\VmailBundle\Entity\Domain
+     * @var Domain
      */
     private $domain;
-
 
     /**
      * Set email
      *
      * @param string $email
+     *
      * @return Email
      */
     public function setEmail($email)
     {
         $this->email = $email;
-    
+
         return $this;
     }
 
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -67,19 +68,20 @@ class Email
      * Set localPart
      *
      * @param string $localPart
+     *
      * @return Email
      */
     public function setLocalPart($localPart)
     {
         $this->localPart = $localPart;
-    
+
         return $this;
     }
 
     /**
      * Get localPart
      *
-     * @return string 
+     * @return string
      */
     public function getLocalPart()
     {
@@ -89,20 +91,21 @@ class Email
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
+     *
      * @return Email
      */
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -112,20 +115,21 @@ class Email
     /**
      * Set modified
      *
-     * @param \DateTime $modified
+     * @param DateTime $modified
+     *
      * @return Email
      */
     public function setModified($modified)
     {
         $this->modified = $modified;
-    
+
         return $this;
     }
 
     /**
      * Get modified
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getModified()
     {
@@ -135,7 +139,7 @@ class Email
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -145,20 +149,21 @@ class Email
     /**
      * Set domain
      *
-     * @param \Lasso\VmailBundle\Entity\Domain $domain
+     * @param Domain $domain
+     *
      * @return Email
      */
-    public function setDomain(\Lasso\VmailBundle\Entity\Domain $domain = null)
+    public function setDomain(Domain $domain = null)
     {
         $this->domain = $domain;
-    
+
         return $this;
     }
 
     /**
      * Get domain
      *
-     * @return \Lasso\VmailBundle\Entity\Domain 
+     * @return Domain
      */
     public function getDomain()
     {

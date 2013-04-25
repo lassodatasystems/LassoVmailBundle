@@ -7,10 +7,6 @@
     <parameters>
         <parameter key="lasso_vmail.orm.entity_manager.class">Doctrine\ORM\EntityManager</parameter>
         <parameter key="lasso_vmail.mailbox_manager.class">Lasso\VmailBundle\MailboxManager</parameter>
-        <parameter key="lasso_vmail.alias_repository.class">Lasso\VmailBundle\Repository\AliasRepository</parameter>
-        <parameter key="lasso_vmail.domain_repository.class">Lasso\VmailBundle\Repository\DomainRepository</parameter>
-        <parameter key="lasso_vmail.email_repository.class">Lasso\VmailBundle\Repository\EmailRepository</parameter>
-        <parameter key="lasso_vmail.mailbox_repository.class">Lasso\VmailBundle\Repository\MailboxRepository</parameter>
         <parameter key="lasso_vmail.doctrine_repository.class">Doctrine\ORM\EntityRepository</parameter>
     </parameters>
 
@@ -22,13 +18,33 @@
             <argument type="string">%lasso_vmail.entity_manager_name%</argument>
         </service>
 
-        <service id="lasso_vmail.alias_repository" class="%lasso_vmail.alias_repository.class%"/>
+        <service id="lasso_vmail.alias_repository"
+                 factory-service="lasso_vmail.entity_manager"
+                 factory-method="getRepository"
+                 class="Lasso\VmailBundle\Repository\AliasRepository">
+            <argument>Lasso\VmailBundle\Entity\Alias</argument>
+        </service>
 
-        <service id="lasso_vmail.domain_repository" class="%lasso_vmail.domain_repository.class%"/>
+        <service id="lasso_vmail.domain_repository"
+                 factory-service="lasso_vmail.entity_manager"
+                 factory-method="getRepository"
+                 class="Lasso\VmailBundle\Repository\DomainRepository">
+            <argument>Lasso\VmailBundle\Entity\Domain</argument>
+        </service>
 
-        <service id="lasso_vmail.email_repository" class="%lasso_vmail.email_repository.class%"/>
+        <service id="lasso_vmail.email_repository"
+                 factory-service="lasso_vmail.entity_manager"
+                 factory-method="getRepository"
+                 class="Lasso\VmailBundle\Repository\EmailRepository">
+            <argument>Lasso\VmailBundle\Entity\Email</argument>
+        </service>
 
-        <service id="lasso_vmail.mailbox_repository" class="%lasso_vmail.mailbox_repository.class%"/>
+        <service id="lasso_vmail.mailbox_repository"
+                 factory-service="lasso_vmail.entity_manager"
+                 factory-method="getRepository"
+                 class="Lasso\VmailBundle\Repository\MailboxRepository">
+            <argument>Lasso\VmailBundle\Entity\Mailbox</argument>
+        </service>
 
         <service id="lasso_vmail.mailbox_manager" class="%lasso_vmail.mailbox_manager.class%">
             <argument type="service" id="lasso_vmail.entity_manager"/>
@@ -37,6 +53,8 @@
             <argument type="service" id="lasso_vmail.email_repository"/>
             <argument type="service" id="lasso_vmail.mailbox_repository"/>
             <argument type="service" id="logger"/>
+            <argument>%lasso_vmail.default_quota%</argument>
+            <argument>%lasso_vmail.root_mail_dir%</argument>
         </service>
     </services>
 </container>

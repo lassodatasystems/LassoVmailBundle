@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="Lasso\VmailBundle\Entity\Mailbox" table="mailbox">
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Lasso\VmailBundle\Entity\Mailbox" table="mailbox" repository-class="Lasso\VmailBundle\Repository\MailboxRepository">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="username" type="string" column="username" length="255" nullable="false"/>
     <field name="password" type="string" column="password" length="255" nullable="false"/>
-    <field name="name" type="string" column="name" length="255" nullable="false"/>
     <field name="maildir" type="string" column="maildir" length="255" nullable="false"/>
     <field name="quota" type="bigint" column="quota" nullable="false"/>
-    <field name="created" type="datetime" column="created" nullable="false"/>
-    <field name="modified" type="datetime" column="modified" nullable="false"/>
+      <field name="created" type="datetime" column="created">
+          <gedmo:timestampable on="create"/>
+      </field>
+      <field name="modified" type="datetime" column="modified">
+          <gedmo:timestampable on="update"/>
+      </field>
     <field name="active" type="boolean" column="active" nullable="false"/>
     <many-to-one field="email" target-entity="Email">
+      <cascade>
+        <cascade-persist/>
+      </cascade>
       <join-columns>
         <join-column name="email" referenced-column-name="id"/>
       </join-columns>

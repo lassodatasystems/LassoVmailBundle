@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,42 +13,37 @@ class Mailbox
     /**
      * @var string
      */
-    private $username;
+    private $username = '';
 
     /**
      * @var string
      */
-    private $password;
+    private $password = '';
 
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $maildir;
+    private $maildir = '';
 
     /**
      * @var integer
      */
-    private $quota;
+    private $quota = 0;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     private $modified;
 
     /**
      * @var boolean
      */
-    private $active;
+    private $active = 1;
 
     /**
      * @var integer
@@ -55,28 +51,28 @@ class Mailbox
     private $id;
 
     /**
-     * @var \Lasso\VmailBundle\Entity\Email
+     * @var Email
      */
     private $email;
-
 
     /**
      * Set username
      *
      * @param string $username
+     *
      * @return Mailbox
      */
     public function setUsername($username)
     {
         $this->username = $username;
-    
+
         return $this;
     }
 
     /**
      * Get username
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -87,19 +83,20 @@ class Mailbox
      * Set password
      *
      * @param string $password
+     *
      * @return Mailbox
      */
     public function setPassword($password)
     {
         $this->password = $password;
-    
+
         return $this;
     }
 
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -107,45 +104,23 @@ class Mailbox
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Mailbox
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Set maildir
      *
      * @param string $maildir
+     *
      * @return Mailbox
      */
     public function setMaildir($maildir)
     {
         $this->maildir = $maildir;
-    
+
         return $this;
     }
 
     /**
      * Get maildir
      *
-     * @return string 
+     * @return string
      */
     public function getMaildir()
     {
@@ -156,19 +131,22 @@ class Mailbox
      * Set quota
      *
      * @param integer $quota
+     *
      * @return Mailbox
      */
     public function setQuota($quota)
     {
-        $this->quota = $quota;
-    
+        if($quota){
+            $this->quota = $quota;
+        }
+
         return $this;
     }
 
     /**
      * Get quota
      *
-     * @return integer 
+     * @return integer
      */
     public function getQuota()
     {
@@ -178,20 +156,21 @@ class Mailbox
     /**
      * Set created
      *
-     * @param \DateTime $created
+     * @param DateTime $created
+     *
      * @return Mailbox
      */
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -201,20 +180,21 @@ class Mailbox
     /**
      * Set modified
      *
-     * @param \DateTime $modified
+     * @param DateTime $modified
+     *
      * @return Mailbox
      */
     public function setModified($modified)
     {
         $this->modified = $modified;
-    
+
         return $this;
     }
 
     /**
      * Get modified
      *
-     * @return \DateTime 
+     * @return DateTime
      */
     public function getModified()
     {
@@ -225,19 +205,20 @@ class Mailbox
      * Set active
      *
      * @param boolean $active
+     *
      * @return Mailbox
      */
     public function setActive($active)
     {
         $this->active = $active;
-    
+
         return $this;
     }
 
     /**
      * Get active
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getActive()
     {
@@ -247,7 +228,7 @@ class Mailbox
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -257,20 +238,21 @@ class Mailbox
     /**
      * Set email
      *
-     * @param \Lasso\VmailBundle\Entity\Email $email
+     * @param Email $email
+     *
      * @return Mailbox
      */
-    public function setEmail(\Lasso\VmailBundle\Entity\Email $email = null)
+    public function setEmail(Email $email = null)
     {
         $this->email = $email;
-    
+
         return $this;
     }
 
     /**
      * Get email
      *
-     * @return \Lasso\VmailBundle\Entity\Email 
+     * @return Email
      */
     public function getEmail()
     {

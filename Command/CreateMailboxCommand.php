@@ -28,8 +28,7 @@ class CreateMailboxCommand extends ContainerAwareCommand
             ->addArgument('password', InputArgument::REQUIRED, 'password for the mailbox, see no-hash option')
             ->addArgument('domain', InputArgument::REQUIRED, 'domain for the mailbox')
             ->addArgument('quota', InputArgument::OPTIONAL, 'mailbox size in bytes')
-            ->addOption('no-hash', 'p', InputOption::VALUE_NONE, 'if set password will not be hashed on insert, use to sync password hash from other systems')
-        ;
+            ->addOption('no-hash', 'P', InputOption::VALUE_NONE, 'if set password will not be hashed, use to preserve hashes from other systems');
     }
 
     /**
@@ -37,11 +36,12 @@ class CreateMailboxCommand extends ContainerAwareCommand
      * @param OutputInterface $output
      *
      * @return mixed
-     */protected function execute(InputInterface $input, OutputInterface $output)
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $quota = $input->getArgument('quota') != '' ? $input->getArgument('quota') : 0;
         /** @var $mailboxManager MailboxManager */
         $mailboxManager = $this->getContainer()->get('lasso_vmail.mailbox_manager');
-        return $mailboxManager->createMailbox($input->getArgument('username'), $input->getArgument('password'), $input->getArgument('domain'), $input->getArgument('quota'), $input->getOption('no-hash'));
+        return $mailboxManager->createMailbox($input->getArgument('username'), $input->getArgument('password'), $input->getArgument('domain'), $quota, $input->getOption('no-hash'));
     }
 }

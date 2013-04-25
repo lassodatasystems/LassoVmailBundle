@@ -1,0 +1,25 @@
+{
+    "name": "lasso/vmail-bundle",
+    "description": "an implementation of postfix virtual users",
+    "type": "symfony-bundle",
+    "keywords": [
+        "postfix", "vmail", "Symfony2"
+    ],
+    "homepage": "https://github.com/lassodatasystems",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Andrew Clark",
+            "email": "andrew@lassocrm.com",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "stof/doctrine-extensions-bundle": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Lasso\\VmailBundle": "" }
+    },
+    "target-dir": "Lasso/VmailBundle"
+}
