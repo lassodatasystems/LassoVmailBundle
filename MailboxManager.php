@@ -155,8 +155,8 @@ class MailboxManager
             $domain  = $this->domainRepository->getDomain($domainString);
             $email   = $this->emailRepository->getEmail($localPart, $domain);
             $mailbox = $this->mailboxRepository->getMailbox($localPart, $email);
-            $mailbox->setPassword($this->setPassword($password, $noHash));
-            $mailbox->setMaildir($this->rootMailDir);
+            $mailbox->setPassword($this->getPassword($password, $noHash));
+            $mailbox->setMaildir($this->getMailDir($localPart));
             $mailbox->setQuota($quota);
 
             $alias = $this->aliasRepository->getAlias($email, $email);
@@ -176,7 +176,6 @@ class MailboxManager
             return $e->getCode();
         } catch (Exception $e) {
             $this->logger->err($e->getMessage());
-            echo $e->getMessage();
             $this->em->rollback();
             $this->em->close();
 
@@ -184,7 +183,27 @@ class MailboxManager
         }
     }
 
-    private function setPassword($password, $noHash){
+    /**
+     * @param $username
+     *
+     * @return string
+     * @throws VmailException
+     */
+    private function getMailDir($username){
+        if(strlen($username) < 3){
+            throw VmailException::invalidUsername($username);
+        } else{
+            return $this->rootMailDir . '/' . $username[0] . '/' . $username[1] . '/' . $username[2];
+        }
+    }
+
+    /**
+     * @param string $password
+     * @param bool $noHash
+     *
+     * @return string
+     */
+    private function getPassword($password, $noHash){
         if($noHash){
             return $password;
         } else {

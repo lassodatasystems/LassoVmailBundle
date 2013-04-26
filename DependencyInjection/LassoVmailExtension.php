@@ -28,7 +28,5 @@ class LassoVmailExtension extends Extension
         foreach ($config as $key => $value) {
             $container->setParameter("lasso_vmail." . $key, $value);
         }
-
-
     }
 }
