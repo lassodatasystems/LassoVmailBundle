@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManager;
 use Exception;
 use Lasso\VmailBundle\Entity\Mailbox;
 use Lasso\VmailBundle\Exception\VmailException;
-use Lasso\VmailBundle\Repository\AliasRepository;
 use Lasso\VmailBundle\Repository\DomainRepository;
 use Lasso\VmailBundle\Repository\EmailRepository;
 use Lasso\VmailBundle\Repository\MailboxRepository;
@@ -25,9 +24,9 @@ class MailboxManager
     private $em = null;
 
     /**
-     * @var AliasRepository
+     * @var AliasManager
      */
-    private $aliasRepository = null;
+    private $aliasManager = null;
 
     /**
      * @var DomainRepository
@@ -66,7 +65,7 @@ class MailboxManager
 
     /**
      * @param EntityManager     $em
-     * @param AliasRepository   $aliasRepository
+     * @param AliasManager      $aliasManager
      * @param DomainRepository  $domainRepository
      * @param EmailRepository   $emailRepository
      * @param MailboxRepository $mailboxRepository
@@ -77,60 +76,22 @@ class MailboxManager
      * @internal param MailboxManager $mailboxFactory
      */
     public function __construct(EntityManager $em,
-                                AliasRepository $aliasRepository,
+                                AliasManager $aliasManager,
                                 DomainRepository $domainRepository,
                                 EmailRepository $emailRepository,
                                 MailboxRepository $mailboxRepository,
                                 Logger $logger,
-                                $defaultQuota,
-                                $rootMailDir)
+                                $defaultQuota = 0,
+                                $rootMailDir = '')
     {
         $this->em                = $em;
-        $this->aliasRepository   = $aliasRepository;
+        $this->aliasManager      = $aliasManager;
         $this->domainRepository  = $domainRepository;
         $this->emailRepository   = $emailRepository;
         $this->mailboxRepository = $mailboxRepository;
         $this->logger            = $logger;
         $this->defaultQuota      = $defaultQuota;
         $this->rootMailDir       = $rootMailDir;
-    }
-
-    /**
-     * @param $userName
-     * @param $hash
-     *
-     * @throws VmailException
-     * @throws VmailException
-     * @return int
-     */
-    public function updatePassword($userName, $hash)
-    {
-        /** @var $mailbox Mailbox */
-        $mailbox = $this->mailboxRepository->find($userName);
-
-        try {
-            if (!$mailbox) {
-                throw VmailException::mailboxNotFound($userName);
-            }
-            if (!$this->isValidHash($hash)) {
-                throw VmailException::invalidPasswordHash($hash);
-            }
-
-            $mailbox->setPassword($hash);
-            $this->em->persist($mailbox);
-            $this->em->flush();
-
-            return 0;
-        } catch (VmailException $e) {
-            $this->logger->err($e->getMessage());
-
-            return 1;
-        }
-        catch (Exception $e) {
-            $this->logger->err($e->getMessage());
-
-            return 2;
-        }
     }
 
     /**
@@ -145,21 +106,29 @@ class MailboxManager
     public function createMailbox($localPart, $password, $domainString, $quota = 0, $noHash = false)
     {
         $emailString = $localPart . '@' . $domainString;
-        $quota = $quota ? $quota : $this->defaultQuota;
+        $quota       = $quota ? $quota : $this->defaultQuota;
         $this->em->beginTransaction();
         try {
-            if ($this->emailExists($emailString)) {
+            if ($this->emailRepository->exists($emailString)) {
                 throw VmailException::emailExists($emailString);
+            } else if (!filter_var($emailString, FILTER_VALIDATE_EMAIL)) {
+                throw VmailException::invalidEmail($emailString);
+            } else if(!$this->isValidUserName($localPart)){
+                throw VmailException::invalidUsername($localPart);
             }
 
-            $domain  = $this->domainRepository->getDomain($domainString);
-            $email   = $this->emailRepository->getEmail($localPart, $domain);
-            $mailbox = $this->mailboxRepository->getMailbox($localPart, $email);
+            $domain = $this->domainRepository->getDomain($domainString);
+
+            $email = $this->emailRepository->getEmail($emailString);
+            $email->setDomain($domain);
+
+            $mailbox = $this->mailboxRepository->getMailbox($localPart);
+            $mailbox->setEmail($email);
             $mailbox->setPassword($this->getPassword($password, $noHash));
             $mailbox->setMaildir($this->getMailDir($localPart));
             $mailbox->setQuota($quota);
 
-            $alias = $this->aliasRepository->getAlias($email, $email);
+            $alias = $this->aliasManager->createAlias($email->getEmail(), $email->getEmail());
 
             $this->em->persist($mailbox);
             $this->em->persist($alias);
@@ -189,22 +158,24 @@ class MailboxManager
      * @return string
      * @throws VmailException
      */
-    private function getMailDir($username){
-        if(strlen($username) < 3){
+    private function getMailDir($username)
+    {
+        if (strlen($username) < 3) {
             throw VmailException::invalidUsername($username);
-        } else{
+        } else {
             return $this->rootMailDir . '/' . $username[0] . '/' . $username[1] . '/' . $username[2];
         }
     }
 
     /**
      * @param string $password
-     * @param bool $noHash
+     * @param bool   $noHash
      *
      * @return string
      */
-    private function getPassword($password, $noHash){
-        if($noHash){
+    private function getPassword($password, $noHash)
+    {
+        if ($noHash) {
             return $password;
         } else {
             return $this->hashPassword($password);
@@ -216,23 +187,9 @@ class MailboxManager
      *
      * @return string
      */
-    private function hashPassword($password) {
-        return crypt($password, uniqid('$1$'));
-    }
-
-    /**
-     * @param string $email
-     *
-     * @return bool
-     */
-    private function emailExists($email)
+    private function hashPassword($password)
     {
-        $email = $this->emailRepository->findOneBy(array('email' => $email));
-        if (!$email) {
-            return false;
-        }
-
-        return true;
+        return crypt($password, uniqid('$1$'));
     }
 
     /**
@@ -243,5 +200,9 @@ class MailboxManager
     private function isValidHash($hash)
     {
         return (substr($hash, 0, 3) == '$1$' && strlen($hash) == 34);
+    }
+
+    private function isValidUserName($username){
+        return strlen($username) >= 3;
     }
 }

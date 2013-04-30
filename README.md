@@ -10,7 +10,7 @@ stof_doctrine_extensions:
     vmail:
       timestampable: true
 
-#Vmail - postfix virtual users
+#Optional overrides for vmail
 lasso_vmail:
     root_mail_dir: /vmstore/vmail
     default_quota: 2147483648

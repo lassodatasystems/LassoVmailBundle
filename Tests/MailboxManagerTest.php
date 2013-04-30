@@ -1,5 +1,6 @@
 <?php
 
+use Lasso\VmailBundle\Entity\Email;
 use Lasso\VmailBundle\Exception\VmailException;
 use Lasso\VmailBundle\MailboxManager;
 
@@ -11,21 +12,25 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
      */
     public function mailboxCreationFailsWhenEmailExists()
     {
-
         $username = 'travis';
         $domain   = 'test.com';
 
-        $mockEm        = $this->getMock('\Doctrine\ORM\EntityManager', array(), array(), '', false);
-        $mockAliasRepo = $this->getMock('\Lasso\VmailBundle\Repository\AliasRepository', array(), array(), '', false);
-        $mockEmailRepo = $this->getMock('\Lasso\VmailBundle\Repository\EmailRepository', array(), array(), '', false);
+        $email = new Email();
+        $email->setEmail($username . '@' . $domain);
+
+        $mockEm        = $this->getMock('\Doctrine\ORM\EntityManager', [], [], '', false);
+        $mockEmailRepo = $this->getMock('\Lasso\VmailBundle\Repository\EmailRepository', ['findOneBy'], [], '', false);
         $mockEmailRepo->expects($this->once())
             ->method('findOneBy')
-            ->will($this->returnValue($username . '@' . $domain));
-        $mockDomainRepo  = $this->getMock('\Lasso\VmailBundle\Repository\DomainRepository', array(), array(), '', false);
-        $mockMailboxRepo = $this->getMock('\Lasso\VmailBundle\Repository\MailboxRepository', array(), array(), '', false);
-        $mockLogger      = $this->getMock('\Monolog\Logger', array(), array(), '', false);
+            ->will($this->returnValue($email));
 
-        $mailboxManager = new MailboxManager($mockEm, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger, 2147483648, '/vmstore/vmail');
+        $mockDomainRepo  = $this->getMock('\Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockMailboxRepo = $this->getMock('\Lasso\VmailBundle\Repository\MailboxRepository', [], [], '', false);
+        $mockLogger      = $this->getMock('\Monolog\Logger', [], [], '', false);
+
+        $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
+
+        $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger, 2147483648, '/vmstore/vmail');
         $return         = $mailboxManager->createMailbox($username, 'password', $domain);
 
         $this->assertEquals($return, VmailException::ERROR_EMAIL_EXISTS);
@@ -37,5 +42,52 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
     public function createMailboxWithNoHashOption()
     {
 
+    }
+
+    /**
+     * @test
+     */
+    public function createMailboxWithInvalidEmail()
+    {
+        $mockEm        = $this->getMock('\Doctrine\ORM\EntityManager', [], [], '', false);
+        $mockEmailRepo = $this->getMock('\Lasso\VmailBundle\Repository\EmailRepository', ['exists'], [], '', false);
+        $mockEmailRepo->expects($this->once())
+            ->method('exists')
+            ->will($this->returnValue(false));
+
+        $mockDomainRepo  = $this->getMock('\Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockMailboxRepo = $this->getMock('\Lasso\VmailBundle\Repository\MailboxRepository', [], [], '', false);
+        $mockLogger      = $this->getMock('\Monolog\Logger', [], [], '', false);
+
+        $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
+
+        $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger);
+        $return         = $mailboxManager->createMailbox('travis', 'password', 'test');
+
+        $this->assertEquals($return, VmailException::ERROR_INVALID_EMAIL);
+    }
+
+
+    /**
+     * @test
+     */
+    public function createMailboxWithInvalidUsername()
+    {
+        $mockEm        = $this->getMock('\Doctrine\ORM\EntityManager', [], [], '', false);
+        $mockEmailRepo = $this->getMock('\Lasso\VmailBundle\Repository\EmailRepository', ['exists'], [], '', false);
+        $mockEmailRepo->expects($this->once())
+            ->method('exists')
+            ->will($this->returnValue(false));
+
+        $mockDomainRepo  = $this->getMock('\Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockMailboxRepo = $this->getMock('\Lasso\VmailBundle\Repository\MailboxRepository', [], [], '', false);
+        $mockLogger      = $this->getMock('\Monolog\Logger', [], [], '', false);
+
+        $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
+
+        $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger);
+        $return         = $mailboxManager->createMailbox('tr', 'password', 'test.com');
+
+        $this->assertEquals($return, VmailException::ERROR_INVALID_USERNAME);
     }
 }

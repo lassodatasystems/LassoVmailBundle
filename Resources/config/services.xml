@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="lasso_vmail.orm.entity_manager.class">Doctrine\ORM\EntityManager</parameter>
         <parameter key="lasso_vmail.mailbox_manager.class">Lasso\VmailBundle\MailboxManager</parameter>
+        <parameter key="lasso_vmail.alias_manager.class">Lasso\VmailBundle\AliasManager</parameter>
         <parameter key="lasso_vmail.doctrine_repository.class">Doctrine\ORM\EntityRepository</parameter>
     </parameters>
 
@@ -48,13 +49,21 @@
 
         <service id="lasso_vmail.mailbox_manager" class="%lasso_vmail.mailbox_manager.class%">
             <argument type="service" id="lasso_vmail.entity_manager"/>
-            <argument type="service" id="lasso_vmail.alias_repository"/>
+            <argument type="service" id="lasso_vmail.alias_manager"/>
             <argument type="service" id="lasso_vmail.domain_repository"/>
             <argument type="service" id="lasso_vmail.email_repository"/>
             <argument type="service" id="lasso_vmail.mailbox_repository"/>
             <argument type="service" id="logger"/>
             <argument>%lasso_vmail.default_quota%</argument>
             <argument>%lasso_vmail.root_mail_dir%</argument>
+        </service>
+
+        <service id="lasso_vmail.alias_manager" class="%lasso_vmail.alias_manager.class%">
+            <argument type="service" id="lasso_vmail.entity_manager"/>
+            <argument type="service" id="lasso_vmail.alias_repository"/>
+            <argument type="service" id="lasso_vmail.domain_repository"/>
+            <argument type="service" id="lasso_vmail.email_repository"/>
+            <argument type="service" id="logger"/>
         </service>
     </services>
 </container>

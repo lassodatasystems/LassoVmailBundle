@@ -23,9 +23,7 @@ class DomainRepository extends EntityRepository
         if (!$domain) {
             $domain = new Domain();
             $domain->setName($name);
-            return $domain;
-        } else {
-            return $domain;
         }
+        return $domain;
     }
 }
