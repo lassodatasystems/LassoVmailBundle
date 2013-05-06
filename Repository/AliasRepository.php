@@ -26,6 +26,7 @@ class AliasRepository extends EntityRepository
             $alias->setSource($source);
             $alias->setDestination($destination);
         }
+
         return $alias;
     }
 

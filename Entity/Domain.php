@@ -205,30 +205,6 @@ class Domain
     }
 
     /**
-     * Set transport
-     *
-     * @param string $transport
-     *
-     * @return Domain
-     */
-    public function setTransport($transport)
-    {
-        $this->transport = $transport;
-
-        return $this;
-    }
-
-    /**
-     * Get transport
-     *
-     * @return string
-     */
-    public function getTransport()
-    {
-        return $this->transport;
-    }
-
-    /**
      * Set created
      *
      * @param DateTime $created

@@ -26,11 +26,13 @@ class MailboxRepository extends EntityRepository
 
         $mailbox = new Mailbox();
         $mailbox->setUsername($username);
+
         return $mailbox;
     }
 
-    private function validateUserName($username){
-        if(strlen($username) <= 3){
+    private function validateUserName($username)
+    {
+        if (strlen($username) <= 3) {
             throw VmailException::invalidUsername($username);
         }
     }

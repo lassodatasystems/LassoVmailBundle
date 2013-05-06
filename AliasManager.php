@@ -30,6 +30,14 @@ class AliasManager
         $this->logger           = $logger;
     }
 
+    /**
+     * @param $sourceString
+     * @param $destinationString
+     *
+     * @return int|mixed
+     *
+     * @throws Exception\VmailException
+     */
     public function createAlias($sourceString, $destinationString)
     {
         $this->em->beginTransaction();
@@ -45,6 +53,12 @@ class AliasManager
             if (!$destination->getDomain()) {
                 $parsedSource = EmailParser::parseEmail($destinationString);
                 $destination->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
+            }
+
+            if($this->needsAliasCycleCheck($source, $destination)){
+                if($this->hasStronglyConnectedComponents($source, $destination)){
+                    throw VmailException::aliasLoopDetected($source->getEmail(), $destination->getEmail());
+                }
             }
 
             $alias = $this->aliasRepository->getAlias($source, $destination);
@@ -71,14 +85,38 @@ class AliasManager
     }
 
     /**
-     * @param $source
-     * @param $destination
+     * @param Email $source
+     * @param Email $destination
      *
      * @return bool
      */
-    private function checkForCycle($source, $aliasDestination)
+    private function needsAliasCycleCheck(Email $source, Email $destination){
+        if(is_null($source->getId()) || is_null($destination->getId())){ // new email don't need to be check
+            return false;
+        }
+        if($source->getEmail() == $destination->getEmail()){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param Email $source
+     * @param Email $destination
+     *
+     * @return bool
+     */
+    private function hasStronglyConnectedComponents(Email $source, Email $destination)
     {
-        //@todo implement this
+        /** @var Alias[] $aliases */
+        $aliases = $this->aliasRepository->findBy(array('source' => $destination));
+        foreach ($aliases as $alias) {
+            if ($alias->getDestination()->getEmail() == $source->getEmail()) {
+                return true;
+            } else {
+                return $this->hasStronglyConnectedComponents($source, $alias->getDestination());
+            }
+        }
         return false;
     }
 }

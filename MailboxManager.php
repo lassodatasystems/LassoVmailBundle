@@ -113,7 +113,7 @@ class MailboxManager
                 throw VmailException::emailExists($emailString);
             } else if (!filter_var($emailString, FILTER_VALIDATE_EMAIL)) {
                 throw VmailException::invalidEmail($emailString);
-            } else if(!$this->isValidUserName($localPart)){
+            } else if (!$this->isValidUserName($localPart)) {
                 throw VmailException::invalidUsername($localPart);
             }
 
@@ -128,10 +128,11 @@ class MailboxManager
             $mailbox->setMaildir($this->getMailDir($localPart));
             $mailbox->setQuota($quota);
 
-            $alias = $this->aliasManager->createAlias($email->getEmail(), $email->getEmail());
+            if ($this->aliasManager->createAlias($email->getEmail(), $email->getEmail()) !== 0) {
+                throw VmailException::invalidAlias();
+            }
 
             $this->em->persist($mailbox);
-            $this->em->persist($alias);
 
             $this->em->flush();
             $this->em->commit();
@@ -202,7 +203,8 @@ class MailboxManager
         return (substr($hash, 0, 3) == '$1$' && strlen($hash) == 34);
     }
 
-    private function isValidUserName($username){
+    private function isValidUserName($username)
+    {
         return strlen($username) >= 3;
     }
 }

@@ -21,14 +21,39 @@ class EmailRepository extends EntityRepository
      */
     public function getEmail($emailString)
     {
+        $email = null;
         $parsedEmail = EmailParser::parseEmail($emailString);
-        $email = $this->findOneBy(array('email' => $emailString));
-        if (!$email) {
-            $email = new Email();
-            $email->setLocalPart($parsedEmail->localPart);
-            $email->setEmail($emailString);
+
+        foreach ($this->getUnManagedEntities() as $entity) {
+            if ($entity->getEmail() == $emailString) {
+                $email = $entity;
+                break;
+            }
         }
+
+        if (is_null($email)) {
+            $email = $this->findOneBy(array('email' => $emailString));
+
+            if (!$email) {
+                $email = new Email();
+                $email->setLocalPart($parsedEmail->localPart);
+                $email->setEmail($emailString);
+            }
+
+            $this->getEntityManager()->persist($email);
+        }
+
         return $email;
+    }
+
+    /**
+     * @return Email[]
+     */
+    protected function getUnManagedEntities()
+    {
+        return array_filter($this->getEntityManager()->getUnitOfWork()->getScheduledEntityInsertions(), function ($e) {
+            return ($e instanceof Email);
+        });
     }
 
     /**
