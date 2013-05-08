@@ -25,6 +25,5 @@ class MailboxRepositoryTest extends PHPUnit_Framework_TestCase
 
         $mailboxRepo = $this->getMock('\Lasso\VmailBundle\Repository\MailboxRepository', ['none'], [], '', false);
         $mailboxRepo->getMailbox($username);
-
     }
 }

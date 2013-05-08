@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Util;
 
+use Lasso\VmailBundle\Exception\VmailException;
 use stdClass;
 
 /**
@@ -19,6 +20,9 @@ class EmailParser
     public static function parseEmail($email)
     {
         $atPos = strpos($email, '@');
+        if(!$atPos){
+            throw VmailException::invalidEmail($email);
+        }
         return new ParsedEmail(substr($email, 0, $atPos), substr($email, $atPos+1));
     }
 }

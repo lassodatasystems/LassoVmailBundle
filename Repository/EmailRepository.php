@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Repository;
 
+use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Lasso\VmailBundle\Entity\Domain;
 use Lasso\VmailBundle\Entity\Email;
@@ -23,7 +24,6 @@ class EmailRepository extends EntityRepository
     {
         $email = null;
         $parsedEmail = EmailParser::parseEmail($emailString);
-
         foreach ($this->getUnManagedEntities() as $entity) {
             if ($entity->getEmail() == $emailString) {
                 $email = $entity;

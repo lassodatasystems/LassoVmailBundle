@@ -44,11 +44,6 @@ class MailboxManager
     private $mailboxRepository = null;
 
     /**
-     * @var MailboxManager
-     */
-    private $mailboxManager = null;
-
-    /**
      * @var Logger
      */
     private $logger = null;
@@ -128,28 +123,39 @@ class MailboxManager
             $mailbox->setMaildir($this->getMailDir($localPart));
             $mailbox->setQuota($quota);
 
-            if ($this->aliasManager->createAlias($email->getEmail(), $email->getEmail()) !== 0) {
-                throw VmailException::invalidAlias();
-            }
+            $this->aliasManager->createAlias($email->getEmail(), $email->getEmail());
 
             $this->em->persist($mailbox);
 
             $this->em->flush();
             $this->em->commit();
 
-            return 0;
-        } catch (VmailException $e) {
-            $this->logger->err($e->getMessage());
-            $this->em->rollback();
-            $this->em->close();
-
-            return $e->getCode();
+            return $mailbox;
         } catch (Exception $e) {
-            $this->logger->err($e->getMessage());
             $this->em->rollback();
             $this->em->close();
 
-            return 2;
+            throw $e;
+        }
+    }
+
+    /**
+     * @param $username
+     * @param $quota
+     *
+     * @throws VmailException
+     */
+    public function updateQuota($username, $quota)
+    {
+        /** @var $mailbox Mailbox */
+        $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
+        if ($mailbox) {
+            $mailbox->setQuota($quota);
+            $this->em->persist($mailbox);
+            $this->em->flush();
+
+        } else {
+            throw VmailException::userNotFound($username);
         }
     }
 
@@ -161,11 +167,7 @@ class MailboxManager
      */
     private function getMailDir($username)
     {
-        if (strlen($username) < 3) {
-            throw VmailException::invalidUsername($username);
-        } else {
-            return $this->rootMailDir . '/' . $username[0] . '/' . $username[1] . '/' . $username[2];
-        }
+        return $this->rootMailDir . '/' . $username[0] . '/' . $username[1] . '/' . $username[2];
     }
 
     /**
@@ -177,6 +179,10 @@ class MailboxManager
     private function getPassword($password, $noHash)
     {
         if ($noHash) {
+            if (!$this->isValidHash($password)) {
+                throw VmailException::invalidPasswordHash($password);
+            }
+
             return $password;
         } else {
             return $this->hashPassword($password);

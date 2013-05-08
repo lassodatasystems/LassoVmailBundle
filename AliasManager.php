@@ -34,9 +34,9 @@ class AliasManager
      * @param $sourceString
      * @param $destinationString
      *
+     * @throws VmailException
+     * @throws Exception
      * @return int|mixed
-     *
-     * @throws Exception\VmailException
      */
     public function createAlias($sourceString, $destinationString)
     {
@@ -44,7 +44,6 @@ class AliasManager
         try {
             $source      = $this->emailRepository->getEmail($sourceString);
             $destination = $this->emailRepository->getEmail($destinationString);
-
             if (!$source->getDomain()) {
                 $parsedSource = EmailParser::parseEmail($sourceString);
                 $source->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
@@ -55,8 +54,8 @@ class AliasManager
                 $destination->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
             }
 
-            if($this->needsAliasCycleCheck($source, $destination)){
-                if($this->hasStronglyConnectedComponents($source, $destination)){
+            if ($this->needsAliasCycleCheck($source, $destination)) {
+                if ($this->hasStronglyConnectedComponents($source, $destination)) {
                     throw VmailException::aliasLoopDetected($source->getEmail(), $destination->getEmail());
                 }
             }
@@ -69,18 +68,11 @@ class AliasManager
             $this->em->commit();
 
             return 0;
-        } catch (VmailException $e) {
-            $this->logger->err($e->getMessage());
-            $this->em->rollback();
-            $this->em->close();
-
-            return $e->getCode();
         } catch (Exception $e) {
-            $this->logger->err($e->getMessage());
             $this->em->rollback();
             $this->em->close();
 
-            return 2;
+            throw $e;
         }
     }
 
@@ -90,17 +82,21 @@ class AliasManager
      *
      * @return bool
      */
-    private function needsAliasCycleCheck(Email $source, Email $destination){
-        if(is_null($source->getId()) || is_null($destination->getId())){ // new email don't need to be check
+    private function needsAliasCycleCheck(Email $source, Email $destination)
+    {
+        if (is_null($source->getId()) || is_null($destination->getId())) { // new email don't need to be check
             return false;
         }
-        if($source->getEmail() == $destination->getEmail()){
+        if ($source->getEmail() == $destination->getEmail()) {
             return false;
         }
+
         return true;
     }
 
     /**
+     * used to detect alias loops
+     *
      * @param Email $source
      * @param Email $destination
      *
@@ -117,6 +113,7 @@ class AliasManager
                 return $this->hasStronglyConnectedComponents($source, $alias->getDestination());
             }
         }
+
         return false;
     }
 }

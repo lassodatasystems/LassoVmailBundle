@@ -30,9 +30,14 @@ class VmailException extends Exception
     const ERROR_ALIAS_LOOP = 6;
 
     /**
-     * Return code for alias
+     * Return code for invalid hash
      */
-    const ERROR_CREATING_ALIAS = 7;
+    const ERROR_INVALID_HASH = 7;
+
+    /**
+     * Return code for user not found
+     */
+    const ERROR_USER_NOT_FOUND = 8;
 
     /**
      * @param $email
@@ -42,6 +47,16 @@ class VmailException extends Exception
     public static function emailExists($email)
     {
         return new self("Unable to create mailbox: {$email}, email or alias already in use.", self::ERROR_EMAIL_EXISTS);
+    }
+
+    /**
+     * @param string $hash
+     *
+     * @return VmailException
+     */
+    public static function invalidPasswordHash($hash)
+    {
+        return new self("Supplied password hash is invalid: {$hash}.", self::ERROR_INVALID_HASH);
     }
 
     /**
@@ -76,11 +91,12 @@ class VmailException extends Exception
     }
 
     /**
+     * @param string $username
      *
      * @return VmailException
      */
-    public static function invalidAlias()
+    public static function userNotFound($username)
     {
-        return new self("Unable to create alias", self::ERROR_CREATING_ALIAS);
+        return new self("User not found: {$username}", self::ERROR_USER_NOT_FOUND);
     }
 }
