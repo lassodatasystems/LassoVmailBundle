@@ -84,10 +84,10 @@ class AliasManager
      */
     private function needsAliasCycleCheck(Email $source, Email $destination)
     {
-        if (is_null($source->getId()) || is_null($destination->getId())) { // new email don't need to be check
+        if (is_null($source->getId()) || is_null($destination->getId())) { // new email don't need to be checked
             return false;
         }
-        if ($source->getEmail() == $destination->getEmail()) {
+        if ($source->getEmail() == $destination->getEmail()) { // an alias loop is valid if it points directly to itself
             return false;
         }
 
@@ -96,6 +96,8 @@ class AliasManager
 
     /**
      * used to detect alias loops
+     *
+     * strongly connected components are those that return back to themselves when traversed
      *
      * @param Email $source
      * @param Email $destination
@@ -107,10 +109,10 @@ class AliasManager
         /** @var Alias[] $aliases */
         $aliases = $this->aliasRepository->findBy(array('source' => $destination));
         foreach ($aliases as $alias) {
-            if ($alias->getDestination()->getEmail() == $source->getEmail()) {
+            if ($alias->getDestination()->getEmail() == $source->getEmail()) { // compare to start of traversal
                 return true;
             } else {
-                return $this->hasStronglyConnectedComponents($source, $alias->getDestination());
+                return $this->hasStronglyConnectedComponents($source, $alias->getDestination()); // continue traversing
             }
         }
 

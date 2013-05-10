@@ -5,12 +5,15 @@ namespace Lasso\VmailBundle;
 use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use FilesystemIterator;
 use Lasso\VmailBundle\Entity\Mailbox;
 use Lasso\VmailBundle\Exception\VmailException;
 use Lasso\VmailBundle\Repository\DomainRepository;
 use Lasso\VmailBundle\Repository\EmailRepository;
 use Lasso\VmailBundle\Repository\MailboxRepository;
 use Monolog\Logger;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Class MailboxManager
@@ -120,7 +123,7 @@ class MailboxManager
             $mailbox = $this->mailboxRepository->getMailbox($localPart);
             $mailbox->setEmail($email);
             $mailbox->setPassword($this->getPassword($password, $noHash));
-            $mailbox->setMaildir($this->getMailDir($localPart));
+            $mailbox->setMaildir($this->getMailDirPath($localPart, $domain->getName()));
             $mailbox->setQuota($quota);
 
             $this->aliasManager->createAlias($email->getEmail(), $email->getEmail());
@@ -140,8 +143,10 @@ class MailboxManager
     }
 
     /**
-     * @param $username
-     * @param $quota
+     * @param string $username
+     * @param int $quota
+     *
+     * updates a users mail quota, quota passed is expected in GB
      *
      * @throws VmailException
      */
@@ -150,7 +155,7 @@ class MailboxManager
         /** @var $mailbox Mailbox */
         $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
         if ($mailbox) {
-            $mailbox->setQuota($quota);
+            $mailbox->setQuota(($quota * pow(1024,3))); //convert to bytes from GB
             $this->em->persist($mailbox);
             $this->em->flush();
 
@@ -162,12 +167,60 @@ class MailboxManager
     /**
      * @param $username
      *
+     * @throws VmailException
+     */
+    public function deleteMailbox($username)
+    {
+        /** @var $mailbox Mailbox */
+        $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
+        if ($mailbox) {
+            $this->deleteMailDirectory($mailbox->getMaildir());
+            $this->em->remove($mailbox);
+            $this->em->flush();
+
+        } else {
+            throw VmailException::userNotFound($username);
+        }
+    }
+
+    /**
+     * @param string $root
+     *
+     * @return bool
+     */
+    protected function deleteMailDirectory($directoryPath)
+    {
+        /** @var $paths RecursiveDirectoryIterator[] */
+        if (is_dir($directoryPath)) {
+            $paths = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($directoryPath, FilesystemIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+            foreach ($paths as $path) {
+                $path->isFile() ? unlink($path->getPathname()) : rmdir($path->getPathname());
+            }
+            rmdir($directoryPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $username
+     *
      * @return string
      * @throws VmailException
      */
-    private function getMailDir($username)
+    private function getMailDirPath($username, $domain)
     {
-        return $this->rootMailDir . '/' . $username[0] . '/' . $username[1] . '/' . $username[2];
+        $maildir = $this->rootMailDir . '/' ;
+        $maildir .= $domain . '/' ;
+        $maildir .= $username[0] . '/' ;
+        $maildir .= $username[1] . '/' ;
+        $maildir .= $username[2] . '/' ;
+        $maildir .= $username . time();
+
+        return $maildir;
     }
 
     /**
@@ -209,6 +262,11 @@ class MailboxManager
         return (substr($hash, 0, 3) == '$1$' && strlen($hash) == 34);
     }
 
+    /**
+     * @param $username
+     *
+     * @return bool
+     */
     private function isValidUserName($username)
     {
         return strlen($username) >= 3;

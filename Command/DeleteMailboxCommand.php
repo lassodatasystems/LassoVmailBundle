@@ -8,11 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Class UpdateQuotaCommand
- * @package Lasso\VmailBundle\Command
- */
-class UpdateQuotaCommand extends ContainerAwareCommand {
+class DeleteMailboxCommand extends ContainerAwareCommand {
 
     /**
      *
@@ -20,10 +16,9 @@ class UpdateQuotaCommand extends ContainerAwareCommand {
     protected function configure()
     {
         $this
-            ->setName('lasso:vmail:update-quota')
-            ->setDescription('updates a users mailbox quota')
-            ->addArgument('username', InputArgument::REQUIRED)
-            ->addArgument('quota', InputArgument::REQUIRED, 'the new quota in GB');
+            ->setName('lasso:vmail:delete-mailbox')
+            ->setDescription('deletes a mailbox and its mail from the file system')
+            ->addArgument('username', InputArgument::REQUIRED, 'username of the mailbox being deleted');
     }
 
     /**
@@ -34,8 +29,8 @@ class UpdateQuotaCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $mailboxManager MailboxManager */
+        /** @var $aliasManager MailboxManager */
         $mailboxManager = $this->getContainer()->get('lasso_vmail.mailbox_manager');
-        return $mailboxManager->updateQuota($input->getArgument('username'), $input->getArgument('quota'));
+        return $mailboxManager->deleteMailbox($input->getArgument('username'));
     }
 }
