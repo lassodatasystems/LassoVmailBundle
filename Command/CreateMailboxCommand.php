@@ -42,6 +42,10 @@ class CreateMailboxCommand extends ContainerAwareCommand
         $quota = $input->getArgument('quota') != '' ? $input->getArgument('quota') : 0;
         /** @var $mailboxManager MailboxManager */
         $mailboxManager = $this->getContainer()->get('lasso_vmail.mailbox_manager');
-        return $mailboxManager->createMailbox($input->getArgument('username'), $input->getArgument('password'), $input->getArgument('domain'), $quota, $input->getOption('no-hash'));
+
+        $mailboxManager->createMailbox($input->getArgument('username'), $input->getArgument('password'), $input->getArgument('domain'), $quota, $input->getOption('no-hash'));
+        $output->writeln("<info>Mailbox was successfully created</info>");
+
+        return 0;
     }
 }

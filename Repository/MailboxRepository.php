@@ -15,8 +15,7 @@ class MailboxRepository extends EntityRepository
 {
 
     /**
-     * @param string $localPart
-     * @param Email  $email
+     * @param $username
      *
      * @return Mailbox
      */
