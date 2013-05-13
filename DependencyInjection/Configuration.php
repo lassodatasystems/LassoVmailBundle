@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode    = $treeBuilder->root('lasso_vmail')
             ->children()
             ->scalarNode('default_quota')->defaultValue('2147483648')->end()
-            ->scalarNode('root_mail_dir')->defaultValue('/vmstore/vmail')->end()
+            ->scalarNode('root_mail_dir')->defaultValue('')->end()
             ->scalarNode('mailbox_format')->defaultValue('Maildir')->end()
             ->scalarNode('entity_manager_name')->defaultValue('vmail')->end()
             ->end();
