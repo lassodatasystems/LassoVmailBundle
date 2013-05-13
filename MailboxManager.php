@@ -165,6 +165,30 @@ class MailboxManager
     }
 
     /**
+     * @param string $username
+     * @param        $password
+     * @param bool   $hash
+     *
+     * @throws VmailException
+     * updates a users password with a new password
+     *
+     */
+    public function updatePassword($username, $password, $hash = false)
+    {
+        /** @var $mailbox Mailbox */
+        $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
+        if ($mailbox) {
+            $password = !$hash ? $this->hashPassword($password) : $password;
+            $mailbox->setPassword($password); //must be a valid hash
+            $this->em->persist($mailbox);
+            $this->em->flush();
+
+        } else {
+            throw VmailException::userNotFound($username);
+        }
+    }
+
+    /**
      * @param $username
      *
      * @throws VmailException
