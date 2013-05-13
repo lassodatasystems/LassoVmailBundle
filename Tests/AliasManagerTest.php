@@ -3,6 +3,7 @@
 namespace Lasso\VmailBundle\Tests;
 
 use Lasso\VmailBundle\AliasManager;
+use Lasso\VmailBundle\Entity\Alias;
 use Lasso\VmailBundle\Entity\Domain;
 use Lasso\VmailBundle\Entity\Email;
 use Lasso\VmailBundle\Exception\VmailException;
@@ -202,41 +203,84 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $return = $aliasManager->createAlias('travis@test.com', 'hawk@test.com');
     }
 
-
+    /**
+     * @test
+     */
     public function deleteAlias(){
 
-        $mockEmail1 = $this->mockEmail('travis@test.com', 1, 5);
-        $mockEmail2 = $this->mockEmail('hawk@test.com', 2, 2);
-        $mockEmail3 = $this->mockEmail('sock@test.com', 2, 1, 0, 0);
+        $email1 = 'travis@test.com';
+        $email2 = 'hawk@test.com';
 
-        $this->setExpectedException('Lasso\VmailBundle\Exception\VmailException');
+        $mockEmail1 = $this->mockEmail($email1, 1, 0, 0, 0);
+        $mockEmail2 = $this->mockEmail($email2, 2, 0, 0, 0);
 
         $mockEntityManger = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
 
-        $mockAlias0 = $this->getMock('Lasso\VmailBundle\Entity\Alias', ['none']);
-        $mockAlias0->setSource($mockEmail2);
-        $mockAlias0->setDestination($mockEmail3);
+        /** @var $mockAlias Alias */
+        $mockAlias = $this->getMock('Lasso\VmailBundle\Entity\Alias', ['none']);
+        $mockAlias->setSource($mockEmail1);
+        $mockAlias->setDestination($mockEmail2);
 
-        $mockAlias1 = $this->getMock('Lasso\VmailBundle\Entity\Alias', ['none']);
-        $mockAlias1->setSource($mockEmail3);
-        $mockAlias1->setDestination($mockEmail1);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findOneBy'], [], '', false);
+        $mockAliasRepo->expects($this->once())
+            ->method('findOneBy')
+            ->will($this->returnValue($mockAlias));
 
-        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy'], [], '', false);
-        $mockAliasRepo->expects($this->exactly(2))
-            ->method('findBy')
-            ->will($this->onConsecutiveCalls([$mockAlias0], [$mockAlias1]));
-
-        $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', ['getDomain'], [], '', false);
-
-        $mockEmailRepo = $this->getMock('Lasso\VmailBundle\Repository\EmailRepository', ['getEmail'], [], '', false);
-        $mockEmailRepo->expects($this->exactly(2))
-            ->method('getEmail')
+        $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockEmailRepo = $this->getMock('Lasso\VmailBundle\Repository\EmailRepository', ['findOneBy'], [], '', false);
+        $mockEmailRepo->expects($this->atLeastOnce())
+            ->method('findOneBy')
             ->will($this->onConsecutiveCalls($mockEmail1, $mockEmail2));
 
         $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
 
         $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
-        $aliasManager->deleteAlias();
+        $aliasManager->deleteAlias($email1, $email2);
+    }
+
+
+    /**
+     * @test
+     */
+    public function deleteAliasForNonExistentSource(){
+
+        $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
+
+        $mockEntityManger = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findOneBy'], [], '', false);
+        $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockEmailRepo = $this->getMock('Lasso\VmailBundle\Repository\EmailRepository', ['findOneBy'], [], '', false);
+        $mockEmailRepo->expects($this->exactly(2))
+            ->method('findOneBy')
+            ->will($this->returnValue(false));
+
+        $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
+
+        $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
+        $aliasManager->deleteAlias('travis@test.com', 'travis@test.com');
+    }
+
+    /**
+     * @test
+     */
+    public function deleteAliasForNonExistentDestination(){
+
+        $mockEmail = $this->mockEmail('hawk@test.com', 1, 0, 0, 0);
+
+        $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
+
+        $mockEntityManger = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findOneBy'], [], '', false);
+        $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
+        $mockEmailRepo = $this->getMock('Lasso\VmailBundle\Repository\EmailRepository', ['findOneBy'], [], '', false);
+        $mockEmailRepo->expects($this->exactly(2))
+            ->method('findOneBy')
+            ->will($this->onConsecutiveCalls($mockEmail, false));
+
+        $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
+
+        $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
+        $aliasManager->deleteAlias('travis@test.com', 'travis@test.com');
     }
 
     /**

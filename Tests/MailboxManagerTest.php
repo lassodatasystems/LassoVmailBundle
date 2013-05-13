@@ -298,7 +298,7 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $root = vfsStream::setup('root', null, $structure);
+        vfsStream::setup('root', null, $structure);
 
         $username = 'travis';
 
@@ -308,7 +308,7 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue('vfs://root'));
 
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManager', ['remove', 'flush'], [], '', false);
-        $mockEm->expects($this->once())
+        $mockEm->expects($this->exactly(2))
             ->method('remove');
         $mockEm->expects($this->once())
             ->method('flush');

@@ -10,34 +10,39 @@ use Exception;
 class VmailException extends Exception
 {
     /**
-     * Return code for email exists
+     * Error code for email exists
      */
     const ERROR_EMAIL_EXISTS = 3;
 
     /**
-     * Return code for invalid username
+     * Error code for invalid username
      */
     const ERROR_INVALID_USERNAME = 4;
 
     /**
-     * Return code for invalid email
+     * Error code for invalid email
      */
     const ERROR_INVALID_EMAIL = 5;
 
     /**
-     * Return code for alias loop
+     * Error code for alias loop
      */
     const ERROR_ALIAS_LOOP = 6;
 
     /**
-     * Return code for invalid hash
+     * Error code for invalid hash
      */
     const ERROR_INVALID_HASH = 7;
 
     /**
-     * Return code for user not found
+     * Error code for user not found
      */
     const ERROR_USER_NOT_FOUND = 8;
+
+    /**
+     * Error code for email not found
+     */
+    const ERROR_EMAIL_NOT_FOUND = 9;
 
     /**
      * @param $email
@@ -98,5 +103,15 @@ class VmailException extends Exception
     public static function userNotFound($username)
     {
         return new self("User not found: {$username}", self::ERROR_USER_NOT_FOUND);
+    }
+
+    /**
+     * @param string $email
+     *
+     * @return VmailException
+     */
+    public static function emailNotFound($email)
+    {
+        return new self("Email not found: {$email}", self::ERROR_EMAIL_NOT_FOUND);
     }
 }

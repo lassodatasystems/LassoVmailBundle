@@ -175,6 +175,7 @@ class MailboxManager
         $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
         if ($mailbox) {
             $this->deleteMailDirectory($mailbox->getMaildir());
+            $this->em->remove($mailbox->getEmail());
             $this->em->remove($mailbox);
             $this->em->flush();
 

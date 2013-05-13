@@ -118,4 +118,23 @@ class AliasManager
 
         return false;
     }
+
+    public function deleteAlias($sourceEmail, $destinationEmail)
+    {
+        $source      = $this->emailRepository->findOneBy(['email' => $sourceEmail]);
+        $destination = $this->emailRepository->findOneBy(['email' => $destinationEmail]);
+
+        if (!$source) {
+            throw VmailException::emailNotFound($sourceEmail);
+        }
+        if (!$destination) {
+            throw VmailException::emailNotFound($destinationEmail);
+        }
+
+        $alias = $this->aliasRepository->findOneBy(['source' => $source, 'destination' => $destination]);
+        $this->em->remove($alias);
+        $this->em->flush();
+
+        return true;
+    }
 }
