@@ -29,10 +29,41 @@ class MailboxRepository extends EntityRepository
         return $mailbox;
     }
 
+    /**
+     * @param $username
+     *
+     * @throws \Lasso\VmailBundle\Exception\VmailException
+     */
     private function validateUserName($username)
     {
         if (strlen($username) <= 3) {
             throw VmailException::invalidUsername($username);
         }
+    }
+
+    /**
+     * @return Mailbox[]
+     */
+    public function getMailboxes($search = '', $limit = false, $offset = false){
+        $qb = $this->createQueryBuilder('m');
+        if($search){
+            $qb->where("m.username LIKE :username");
+            $qb->setParameter('username', "%$search%");
+        }
+        if($offset){
+            $qb->setFirstResult($offset);
+        }
+        if($limit){
+            $qb->setMaxResults($limit);
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return int count
+     */
+    public function getMailboxCount($search = ''){
+        $mailboxes = $this->getMailboxes($search);
+        return count($mailboxes);
     }
 }

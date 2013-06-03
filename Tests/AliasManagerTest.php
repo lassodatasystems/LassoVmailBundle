@@ -235,7 +235,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
 
         $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
-        $aliasManager->deleteAlias($email1, $email2);
+        $aliasManager->deleteAliasByValue($email1, $email2);
     }
 
 
@@ -257,7 +257,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
 
         $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
-        $aliasManager->deleteAlias('travis@test.com', 'travis@test.com');
+        $aliasManager->deleteAliasByValue('travis@test.com', 'travis@test.com');
     }
 
     /**
@@ -280,7 +280,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('Monolog\Logger', [], [], '', false);
 
         $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
-        $aliasManager->deleteAlias('travis@test.com', 'travis@test.com');
+        $aliasManager->deleteAliasByValue('travis@test.com', 'travis@test.com');
     }
 
     /**

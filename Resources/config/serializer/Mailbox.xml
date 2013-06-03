@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Lasso\VmailBundle\Entity\Mailbox" exclusion-policy="ALL"
+           accessor-order="custom" custom-accessor-order="id,username,quota">
+        <property name="id"
+                  expose="true"
+                  type="integer"
+                  accessor-getter="getId"
+                  since-version="1.0"/>
+        <property name="username"
+                  expose="true"
+                  type="string"
+                  since-version="1.0"/>
+        <property name="quota"
+                  expose="true"
+                  type="integer"
+                  since-version="1.0"/>
+    </class>
+</serializer>

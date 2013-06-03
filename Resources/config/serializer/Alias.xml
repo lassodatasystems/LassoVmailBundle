@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Lasso\VmailBundle\Entity\Alias" exclusion-policy="ALL"
+           accessor-order="custom" custom-accessor-order="id,source,destination">
+        <property name="id"
+                  expose="true"
+                  type="integer"
+                  accessor-getter="getId"
+                  since-version="1.0"/>
+        <property name="source"
+                  expose="true"
+                  type="string"
+                  accessor-getter="getSourceEmailString"
+                  since-version="1.0"/>
+        <property name="destination"
+                  expose="true"
+                  type="string"
+                  accessor-getter="getDestinationEmailString"
+                  since-version="1.0"/>
+    </class>
+</serializer>

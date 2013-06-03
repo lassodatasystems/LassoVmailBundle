@@ -169,4 +169,18 @@ class Alias
     {
         return $this->source;
     }
+
+    /**
+     * @return string
+     */
+    public function getSourceEmailString(){
+        return $this->getSource()->getEmail();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationEmailString(){
+        return $this->getDestination()->getEmail();
+    }
 }

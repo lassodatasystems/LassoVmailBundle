@@ -169,4 +169,11 @@ class Email
     {
         return $this->domain;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(){
+        return $this->getEmail();
+    }
 }

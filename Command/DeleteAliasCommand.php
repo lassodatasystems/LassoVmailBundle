@@ -32,7 +32,7 @@ class DeleteAliasCommand extends ContainerAwareCommand {
     {
         /** @var $aliasManager AliasManager */
         $aliasManager = $this->getContainer()->get('lasso_vmail.alias_manager');
-        $return =  $aliasManager->deleteAlias($input->getArgument('source'), $input->getArgument('destination'));
+        $return =  $aliasManager->deleteAliasByValue($input->getArgument('source'), $input->getArgument('destination'));
 
         $output->writeln("<info>Alias deleted.</info>");
 

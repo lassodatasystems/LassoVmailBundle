@@ -14,9 +14,20 @@ use Lasso\VmailBundle\Repository\EmailRepository;
 use Lasso\VmailBundle\Util\EmailParser;
 use Monolog\Logger;
 
+/**
+ * Class AliasManager
+ * @package Lasso\VmailBundle
+ */
 class AliasManager
 {
 
+    /**
+     * @param EntityManager    $em
+     * @param AliasRepository  $aliasRepository
+     * @param DomainRepository $domainRepository
+     * @param EmailRepository  $emailRepository
+     * @param Logger           $logger
+     */
     public function __construct(EntityManager $em,
                                 AliasRepository $aliasRepository,
                                 DomainRepository $domainRepository,
@@ -67,7 +78,7 @@ class AliasManager
             $this->em->flush();
             $this->em->commit();
 
-            return 0;
+            return $alias;
         } catch (Exception $e) {
             $this->em->rollback();
             $this->em->close();
@@ -119,7 +130,29 @@ class AliasManager
         return false;
     }
 
-    public function deleteAlias($sourceEmail, $destinationEmail)
+    /**
+     * @param int $aliasId
+     *
+     * @return bool
+     * @throws VmailException
+     */
+    public function deleteAlias($aliasId)
+    {
+        $alias = $this->aliasRepository->find($aliasId);
+        $this->em->remove($alias);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param string $sourceEmail
+     * @param string $destinationEmail
+     *
+     * @return bool
+     * @throws VmailException
+     */
+    public function deleteAliasByValue($sourceEmail, $destinationEmail)
     {
         $source      = $this->emailRepository->findOneBy(['email' => $sourceEmail]);
         $destination = $this->emailRepository->findOneBy(['email' => $destinationEmail]);
