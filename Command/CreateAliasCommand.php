@@ -38,6 +38,7 @@ class CreateAliasCommand extends ContainerAwareCommand
     {
         /** @var $aliasManager AliasManager */
         $aliasManager = $this->getContainer()->get('lasso_vmail.alias_manager');
-        return $aliasManager->createAlias($input->getArgument('source'), $input->getArgument('destination'));
+        $alias = $aliasManager->createAlias($input->getArgument('source'), $input->getArgument('destination'));
+        return $alias ? 0 : 1;
     }
 }

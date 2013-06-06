@@ -51,29 +51,31 @@ class AliasManager
      */
     public function createAlias($sourceString, $destinationString)
     {
+        $alias = null;
         $this->em->beginTransaction();
         try {
             $source      = $this->emailRepository->getEmail($sourceString);
             $destination = $this->emailRepository->getEmail($destinationString);
-            if (!$source->getDomain()) {
-                $parsedSource = EmailParser::parseEmail($sourceString);
-                $source->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
-            }
 
-            if (!$destination->getDomain()) {
-                $parsedSource = EmailParser::parseEmail($destinationString);
-                $destination->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
-            }
-
-            if ($this->needsAliasCycleCheck($source, $destination)) {
-                if ($this->hasStronglyConnectedComponents($source, $destination)) {
-                    throw VmailException::aliasLoopDetected($source->getEmail(), $destination->getEmail());
+            if (!$this->aliasRepository->aliasExists($source, $destination)) {
+                if (!$source->getDomain()) {
+                    $parsedSource = EmailParser::parseEmail($sourceString);
+                    $source->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
                 }
+
+                if (!$destination->getDomain()) {
+                    $parsedSource = EmailParser::parseEmail($destinationString);
+                    $destination->setDomain($this->domainRepository->getDomain($parsedSource->domainName));
+                }
+
+                if ($this->needsAliasCycleCheck($source, $destination)) {
+                    if ($this->hasStronglyConnectedComponents($source, $destination)) {
+                        throw VmailException::aliasLoopDetected($source->getEmail(), $destination->getEmail());
+                    }
+                }
+                $alias = $this->aliasRepository->getAlias($source, $destination);
+                $this->em->persist($alias);
             }
-
-            $alias = $this->aliasRepository->getAlias($source, $destination);
-
-            $this->em->persist($alias);
 
             $this->em->flush();
             $this->em->commit();
@@ -81,8 +83,6 @@ class AliasManager
             return $alias;
         } catch (Exception $e) {
             $this->em->rollback();
-            $this->em->close();
-
             throw $e;
         }
     }
@@ -120,7 +120,9 @@ class AliasManager
         /** @var Alias[] $aliases */
         $aliases = $this->aliasRepository->findBy(array('source' => $destination));
         foreach ($aliases as $alias) {
-            if ($alias->getDestination()->getEmail() == $source->getEmail()) { // compare to start of traversal
+            if ($alias->getSource()->getId() == $alias->getDestination()->getId()) { // continue if alias is self referencing to prevent infinite loop
+                continue;
+            } else if ($alias->getDestination()->getEmail() == $source->getEmail()) { // compare to start of traversal
                 return true;
             } else {
                 return $this->hasStronglyConnectedComponents($source, $alias->getDestination()); // continue traversing

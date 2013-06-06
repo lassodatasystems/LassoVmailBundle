@@ -173,14 +173,24 @@ class Alias
     /**
      * @return string
      */
-    public function getSourceEmailString(){
+    public function getSourceEmailString()
+    {
         return $this->getSource()->getEmail();
     }
 
     /**
      * @return string
      */
-    public function getDestinationEmailString(){
+    public function getDestinationEmailString()
+    {
         return $this->getDestination()->getEmail();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("[%s] => [%s]", $this->source, $this->destination);
     }
 }

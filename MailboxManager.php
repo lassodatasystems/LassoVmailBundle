@@ -93,13 +93,15 @@ class MailboxManager
     }
 
     /**
-     * @param string $userName
+     * @param string $localPart
      * @param string $password
-     * @param string $domain
-     * @param bool   $noHash
+     * @param string $domainString
      * @param int    $quota
+     * @param bool   $noHash
      *
-     * @return int
+     * @throws Exception
+     *
+     * @return Mailbox
      */
     public function createMailbox($localPart, $password, $domainString, $quota = 0, $noHash = false)
     {
@@ -136,15 +138,13 @@ class MailboxManager
             return $mailbox;
         } catch (Exception $e) {
             $this->em->rollback();
-            $this->em->close();
-
             throw $e;
         }
     }
 
     /**
      * @param string $username
-     * @param int $quota
+     * @param int    $quota
      *
      * updates a users mail quota, quota passed is expected in GB
      *
@@ -155,7 +155,7 @@ class MailboxManager
         /** @var $mailbox Mailbox */
         $mailbox = $this->mailboxRepository->findOneBy(['username' => $username]);
         if ($mailbox) {
-            $mailbox->setQuota(($quota * pow(1024,3))); //convert to bytes from GB
+            $mailbox->setQuota(($quota * pow(1024, 3))); //convert to bytes from GB
             $this->em->persist($mailbox);
             $this->em->flush();
 
@@ -209,7 +209,7 @@ class MailboxManager
     }
 
     /**
-     * @param string $root
+     * @param string $directoryPath
      *
      * @return bool
      */
@@ -231,18 +231,18 @@ class MailboxManager
     }
 
     /**
-     * @param $username
+     * @param string $username
+     * @param string $domain
      *
      * @return string
-     * @throws VmailException
      */
     private function getMailDirPath($username, $domain)
     {
-        $maildir = $this->rootMailDir . '/' ;
-        $maildir .= $domain . '/' ;
-        $maildir .= $username[0] . '/' ;
-        $maildir .= $username[1] . '/' ;
-        $maildir .= $username[2] . '/' ;
+        $maildir = $this->rootMailDir . '/';
+        $maildir .= $domain . '/';
+        $maildir .= $username[0] . '/';
+        $maildir .= $username[1] . '/';
+        $maildir .= $username[2] . '/';
         $maildir .= $username . time();
 
         return $maildir;
@@ -250,9 +250,11 @@ class MailboxManager
 
     /**
      * @param string $password
-     * @param bool   $noHash
+     * @param string $noHash
      *
      * @return string
+     *
+     * @throws VmailException
      */
     private function getPassword($password, $noHash)
     {

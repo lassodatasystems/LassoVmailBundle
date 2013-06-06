@@ -38,10 +38,14 @@ class AliasRepository extends EntityRepository
      */
     public function aliasExists(Email $source, Email $destination)
     {
-        return $this->findOneBy(array('source' => $source->getEmail(), 'destination' => $destination->getEmail())) ? true : false;
+        return $this->findOneBy(array('source' => $source, 'destination' => $destination)) ? true : false;
     }
 
     /**
+     * @param string $search
+     * @param bool   $limit
+     * @param bool   $offset
+     *
      * @return Alias[]
      */
     public function getAliases($search = '', $limit = false, $offset = false){
@@ -64,7 +68,9 @@ class AliasRepository extends EntityRepository
     }
 
     /**
-     * @return int count
+     * @param string $search
+     *
+     * @return int
      */
     public function getAliasCount($search = ''){
         $aliases = $this->getAliases($search);
