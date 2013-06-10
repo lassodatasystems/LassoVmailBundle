@@ -29,7 +29,7 @@ class DeleteMailboxCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $aliasManager MailboxManager */
+        /** @var $mailboxManager MailboxManager */
         $mailboxManager = $this->getContainer()->get('lasso_vmail.mailbox_manager');
         $return = $mailboxManager->deleteMailbox($input->getArgument('username'));
 
