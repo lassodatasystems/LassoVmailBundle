@@ -3,7 +3,6 @@
 namespace Lasso\VmailBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Lasso\VmailBundle\Entity\Email;
 use Lasso\VmailBundle\Entity\Mailbox;
 use Lasso\VmailBundle\Exception\VmailException;
 
@@ -32,7 +31,7 @@ class MailboxRepository extends EntityRepository
     /**
      * @param $username
      *
-     * @throws \Lasso\VmailBundle\Exception\VmailException
+     * @throws VmailException
      */
     private function validateUserName($username)
     {
@@ -42,6 +41,10 @@ class MailboxRepository extends EntityRepository
     }
 
     /**
+     * @param string $search
+     * @param bool   $limit
+     * @param bool   $offset
+     *
      * @return Mailbox[]
      */
     public function getMailboxes($search = '', $limit = false, $offset = false, $sort = [])
@@ -65,6 +68,8 @@ class MailboxRepository extends EntityRepository
     }
 
     /**
+     * @param string $search
+     *
      * @return int count
      */
     public function getMailboxCount($search = '')

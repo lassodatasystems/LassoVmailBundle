@@ -31,20 +31,45 @@ class AliasRepository extends EntityRepository
     }
 
     /**
-     * @param Email $source
-     * @param Email $destination
+     * @param Email|string $source
+     * @param Email|string $destination
      *
      * @return bool
      */
-    public function aliasExists(Email $source, Email $destination)
+    public function aliasExists($source, $destination)
     {
+        if (!($source instanceof Email) && !($destination instanceof Email)) {
+            return $this->aliasExistsByString($source, $destination);
+        }
+
         return $this->findOneBy(array('source' => $source, 'destination' => $destination)) ? true : false;
+    }
+
+    /**
+     * @param string $source
+     * @param string $destination
+     *
+     * @return bool
+     */
+    public function aliasExistsByString($source, $destination)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->leftJoin('a.source', 's');
+        $qb->leftJoin('a.destination', 'd');
+        $qb->where("s.email = :sourceEmail");
+        $qb->andWhere("d.email = :destinationEmail");
+        $qb->setParameter('sourceEmail', $source);
+        $qb->setParameter('destinationEmail', $destination);
+        $result = $qb->getQuery()->getOneOrNullResult();
+
+        return $result;
     }
 
     /**
      * @param string $search
      * @param bool   $limit
      * @param bool   $offset
+     * @param array  $sort
      *
      * @return Alias[]
      */

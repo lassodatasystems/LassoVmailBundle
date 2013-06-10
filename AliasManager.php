@@ -54,10 +54,9 @@ class AliasManager
         $alias = null;
         $this->em->beginTransaction();
         try {
-            $source      = $this->emailRepository->getEmail($sourceString);
-            $destination = $this->emailRepository->getEmail($destinationString);
-
-            if (!$this->aliasRepository->aliasExists($source, $destination)) {
+            if (!$this->aliasRepository->aliasExists($sourceString, $destinationString)) {
+                $source      = $this->emailRepository->getEmail($sourceString);
+                $destination = $this->emailRepository->getEmail($destinationString);
                 if (!$source->getDomain()) {
                     $parsedSource = EmailParser::parseEmail($sourceString);
                     $source->setDomain($this->domainRepository->getDomain($parsedSource->domainName));

@@ -13,7 +13,7 @@ class Email
     /**
      * @var string
      */
-    private $email;
+    private $email = '';
 
     /**
      * @var string

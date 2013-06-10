@@ -22,7 +22,7 @@ class EmailRepository extends EntityRepository
      */
     public function getEmail($emailString)
     {
-        $email = null;
+        $email       = null;
         $parsedEmail = EmailParser::parseEmail($emailString);
         foreach ($this->getUnManagedEntities() as $entity) {
             if ($entity->getEmail() == $emailString) {
@@ -32,8 +32,7 @@ class EmailRepository extends EntityRepository
         }
 
         if (is_null($email)) {
-            $email = $this->findOneBy(array('email' => $emailString));
-
+            $email = $this->findOneBy(['email' => $emailString]);
             if (!$email) {
                 $email = new Email();
                 $email->setLocalPart($parsedEmail->localPart);
