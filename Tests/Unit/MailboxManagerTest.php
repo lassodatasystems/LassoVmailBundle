@@ -1,8 +1,11 @@
 <?php
 
+namespace Lasso\VmailBundle\Unit\Tests;
+
 use Lasso\VmailBundle\Entity\Email;
 use Lasso\VmailBundle\Exception\VmailException;
 use Lasso\VmailBundle\MailboxManager;
+use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStream;
 
 class MailboxManagerTest extends PHPUnit_Framework_TestCase

@@ -48,22 +48,32 @@ class AliasRepository extends EntityRepository
      *
      * @return Alias[]
      */
-    public function getAliases($search = '', $limit = false, $offset = false){
+    public function getAliases($search = '', $limit = false, $offset = false, $sort = [])
+    {
         $qb = $this->createQueryBuilder('a');
         $qb->leftJoin('a.source', 's');
         $qb->leftJoin('a.destination', 'd');
-        if($search){
+        if ($search) {
             $qb->where("s.email LIKE :sourceEmail");
             $qb->orWhere("d.email LIKE :destinationEmail");
             $qb->setParameter('sourceEmail', "%$search%");
             $qb->setParameter('destinationEmail', "%$search%");
         }
-        if($offset){
+        if ($offset) {
             $qb->setFirstResult($offset);
         }
-        if($limit){
+        if ($limit) {
             $qb->setMaxResults($limit);
         }
+        if (!empty($sort->property)) {
+            $sortColumns = ['source'      => 's.email',
+                            'destination' => 'd.email',
+                            'aliasId'     => 'a.id'
+            ];
+
+            $qb->orderBy($sortColumns[$sort->property], $sort->direction);
+        }
+
         return $qb->getQuery()->getResult();
     }
 
@@ -72,8 +82,10 @@ class AliasRepository extends EntityRepository
      *
      * @return int
      */
-    public function getAliasCount($search = ''){
+    public function getAliasCount($search = '')
+    {
         $aliases = $this->getAliases($search);
+
         return count($aliases);
     }
 }

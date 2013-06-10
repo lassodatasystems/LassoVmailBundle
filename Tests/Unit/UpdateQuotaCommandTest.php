@@ -1,6 +1,6 @@
 <?php
 
-namespace Lasso\VmailBundle\Tests;
+namespace Lasso\VmailBundle\Tests\Unit;
 
 use Lasso\VmailBundle\Command\UpdateQuotaCommand;
 use Lasso\VmailBundle\Tests\CommandTestCase;

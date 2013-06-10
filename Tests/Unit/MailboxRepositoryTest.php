@@ -1,5 +1,9 @@
 <?php
 
+namespace Lasso\VmailBundle\Tests\Unit;
+
+use PHPUnit_Framework_TestCase;
+
 class MailboxRepositoryTest extends PHPUnit_Framework_TestCase
 {
 
