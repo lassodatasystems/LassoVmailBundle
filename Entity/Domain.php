@@ -21,26 +21,6 @@ class Domain
     private $description = '';
 
     /**
-     * @var integer
-     */
-    private $aliases = 0;
-
-    /**
-     * @var integer
-     */
-    private $mailboxes = 0;
-
-    /**
-     * @var integer
-     */
-    private $maxQuota = 0;
-
-    /**
-     * @var integer
-     */
-    private $quota = 0;
-
-    /**
      * @var DateTime
      */
     private $created;
@@ -106,102 +86,6 @@ class Domain
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set aliases
-     *
-     * @param integer $aliases
-     *
-     * @return Domain
-     */
-    public function setAliases($aliases)
-    {
-        $this->aliases = $aliases;
-
-        return $this;
-    }
-
-    /**
-     * Get aliases
-     *
-     * @return integer
-     */
-    public function getAliases()
-    {
-        return $this->aliases;
-    }
-
-    /**
-     * Set mailboxes
-     *
-     * @param integer $mailboxes
-     *
-     * @return Domain
-     */
-    public function setMailboxes($mailboxes)
-    {
-        $this->mailboxes = $mailboxes;
-
-        return $this;
-    }
-
-    /**
-     * Get mailboxes
-     *
-     * @return integer
-     */
-    public function getMailboxes()
-    {
-        return $this->mailboxes;
-    }
-
-    /**
-     * Set maxQuota
-     *
-     * @param integer $maxQuota
-     *
-     * @return Domain
-     */
-    public function setMaxQuota($maxQuota)
-    {
-        $this->maxQuota = $maxQuota;
-
-        return $this;
-    }
-
-    /**
-     * Get maxQuota
-     *
-     * @return integer
-     */
-    public function getMaxQuota()
-    {
-        return $this->maxQuota;
-    }
-
-    /**
-     * Set quota
-     *
-     * @param integer $quota
-     *
-     * @return Domain
-     */
-    public function setQuota($quota)
-    {
-        $this->quota = $quota;
-
-        return $this;
-    }
-
-    /**
-     * Get quota
-     *
-     * @return integer
-     */
-    public function getQuota()
-    {
-        return $this->quota;
     }
 
     /**

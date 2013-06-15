@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Lasso\VmailBundle\Entity\Domain" table="LocalDomain" repository-class="Lasso\VmailBundle\Repository\DomainRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="created" type="datetime" column="created">
+            <gedmo:timestampable on="create"/>
+        </field>
+        <field name="modified" type="datetime" column="modified">
+            <gedmo:timestampable on="update"/>
+        </field>
+        <field name="active" type="boolean" column="active" nullable="false"/>
+        <many-to-one field="domain" target-entity="Domain">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-columns>
+                <join-column name="domain" referenced-column-name="id"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
