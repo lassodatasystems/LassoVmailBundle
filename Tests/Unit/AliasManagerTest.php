@@ -173,7 +173,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
     {
         $mockEmail1 = $this->mockEmail('travis@test.com', 1, 5, 1, 2);
         $mockEmail2 = $this->mockEmail('hawk@test.com', 2, 2, 1, 2);
-        $mockEmail3 = $this->mockEmail('sock@test.com', 2, 1, 0, 4);
+        $mockEmail3 = $this->mockEmail('sock@test.com', 3, 1, 0, 2);
 
         $this->setExpectedException('Lasso\VmailBundle\Exception\VmailException');
 
@@ -206,7 +206,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
 
         $aliasManager = new AliasManager($mockEntityManger, $mockAliasRepo, $mockDomainRepo, $mockEmailRepo, $mockLogger);
 
-        $return = $aliasManager->createAlias('travis@test.com', 'hawk@test.com');
+        $aliasManager->createAlias('travis@test.com', 'hawk@test.com');
     }
 
     /**
