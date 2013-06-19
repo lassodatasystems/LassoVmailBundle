@@ -140,12 +140,15 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
 
         $mockEntityManger = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
 
-        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy','getAlias'], [], '', false);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy','getAlias', 'aliasExists'], [], '', false);
         $mockAliasRepo->expects($this->once())
             ->method('findBy')
             ->will($this->returnValue([]));
         $mockAliasRepo->expects($this->once())
             ->method('getAlias');
+        $mockAliasRepo->expects($this->once())
+            ->method('aliasExists')
+            ->will($this->returnValue(false));
 
         $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
 
@@ -168,9 +171,9 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
      */
     public function createAliasWithACycle()
     {
-        $mockEmail1 = $this->mockEmail('travis@test.com', 1, 5);
-        $mockEmail2 = $this->mockEmail('hawk@test.com', 2, 2);
-        $mockEmail3 = $this->mockEmail('sock@test.com', 2, 1, 0, 0);
+        $mockEmail1 = $this->mockEmail('travis@test.com', 1, 5, 1, 2);
+        $mockEmail2 = $this->mockEmail('hawk@test.com', 2, 2, 1, 2);
+        $mockEmail3 = $this->mockEmail('sock@test.com', 2, 1, 0, 4);
 
         $this->setExpectedException('Lasso\VmailBundle\Exception\VmailException');
 
@@ -184,10 +187,13 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $mockAlias1->setSource($mockEmail3);
         $mockAlias1->setDestination($mockEmail1);
 
-        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy'], [], '', false);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy', 'aliasExists'], [], '', false);
         $mockAliasRepo->expects($this->exactly(2))
             ->method('findBy')
             ->will($this->onConsecutiveCalls([$mockAlias0], [$mockAlias1]));
+        $mockAliasRepo->expects($this->once())
+            ->method('aliasExists')
+            ->will($this->returnValue(false));
 
         $mockDomainRepo = $this->getMock('Lasso\VmailBundle\Repository\DomainRepository', ['getDomain'], [], '', false);
 
@@ -290,7 +296,14 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
      *
      * @return Email|PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockEmail($email, $id = 1, $expectedEmailCalls = 1, $expectedDomainCalls = 1, $expectedIdCalls = 1, $domain = null) {
+    private function mockEmail(
+        $email,
+        $id = 1,
+        $expectedEmailCalls = 1,
+        $expectedDomainCalls = 1,
+        $expectedIdCalls = 1,
+        $domain = null)
+    {
         if(is_null($domain)) {
             $domain = $this->mockDomain('test.com');
         }
