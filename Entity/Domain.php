@@ -41,6 +41,11 @@ class Domain
     private $id;
 
     /**
+     * @var LocalDomain
+     */
+    private $local;
+
+    /**
      * Set name
      *
      * @param string $name
@@ -168,5 +173,37 @@ class Domain
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set local
+     *
+     * @param LocalDomain $local
+     */
+    public function setLocalDomain(LocalDomain $local = null)
+    {
+        if(!empty($local)){
+            $local->setDomain($this);
+        }
+        $this->local = $local;
+    }
+
+    /**
+     * Get LocalDomain
+     *
+     * @return LocalDomain
+     */
+    public function getLocalDomain()
+    {
+        return $this->local;
+    }
+
+    /**
+     * @return bool
+     *
+     * check to see if this domain has a local domain entry
+     */
+    public function isLocalDomain(){
+        return !is_null($this->getLocalDomain());
     }
 }

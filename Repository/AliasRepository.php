@@ -73,7 +73,7 @@ class AliasRepository extends EntityRepository
      *
      * @return Alias[]
      */
-    public function getAliases($search = '', $limit = false, $offset = false, $sort = [])
+    public function getList($search = '', $limit = false, $offset = false, $sort = [])
     {
         $qb = $this->createQueryBuilder('a');
         $qb->leftJoin('a.source', 's');
@@ -107,9 +107,9 @@ class AliasRepository extends EntityRepository
      *
      * @return int
      */
-    public function getAliasCount($search = '')
+    public function getCount($search = '')
     {
-        $aliases = $this->getAliases($search);
+        $aliases = $this->getList($search);
 
         return count($aliases);
     }

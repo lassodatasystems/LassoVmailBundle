@@ -47,7 +47,7 @@ class MailboxRepository extends EntityRepository
      *
      * @return Mailbox[]
      */
-    public function getMailboxes($search = '', $limit = false, $offset = false, $sort = [])
+    public function getList($search = '', $limit = false, $offset = false, $sort = [])
     {
         $qb = $this->createQueryBuilder('m');
         if ($search) {
@@ -72,9 +72,9 @@ class MailboxRepository extends EntityRepository
      *
      * @return int count
      */
-    public function getMailboxCount($search = '')
+    public function getCount($search = '')
     {
-        $mailboxes = $this->getMailboxes($search);
+        $mailboxes = $this->getList($search);
 
         return count($mailboxes);
     }

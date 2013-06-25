@@ -47,6 +47,13 @@
             <argument>Lasso\VmailBundle\Entity\Mailbox</argument>
         </service>
 
+        <service id="lasso_vmail.local_domain_repository"
+                 factory-service="lasso_vmail.entity_manager"
+                 factory-method="getRepository"
+                 class="%lasso_vmail.doctrine_repository.class%">
+            <argument>Lasso\VmailBundle\Entity\LocalDomain</argument>
+        </service>
+
         <service id="lasso_vmail.mailbox_manager" class="%lasso_vmail.mailbox_manager.class%">
             <argument type="service" id="lasso_vmail.entity_manager"/>
             <argument type="service" id="lasso_vmail.alias_manager"/>

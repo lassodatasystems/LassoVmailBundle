@@ -13,5 +13,10 @@
           <gedmo:timestampable on="update"/>
       </field>
     <field name="active" type="boolean" column="active" nullable="false"/>
+    <one-to-one field="local" target-entity="LocalDomain" mapped-by="domain">
+      <cascade>
+          <cascade-persist/>
+      </cascade>
+    </one-to-one>
   </entity>
 </doctrine-mapping>

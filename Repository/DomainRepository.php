@@ -13,42 +13,45 @@ use Lasso\VmailBundle\Entity\Domain;
 class DomainRepository extends EntityRepository
 {
     /**
-     * @param string $name
+     * @param string $search
+     * @param bool   $limit
+     * @param bool   $offset
+     * @param array  $sort
      *
-     * @return Domain
+     * @return Domain[]
      */
-    public function getDomain($name)
+    public function getList($search = '', $limit = false, $offset = false, $sort = [])
     {
-        $domain = null;
+        $qb = $this->createQueryBuilder('d');
+        $qb->leftJoin('d.local', 'l');
+        if ($search) {
+            $qb->where("d.name LIKE :search");
+            $qb->setParameter('search', "%$search%");
+        }
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+        if (!empty($sort->property)) {
+            $sortColumns = ['domain'=> 'd.name',
+                            'id'    => 'd.id'
+            ];
 
-        foreach($this->getUnManagedEntities() as $entity) {
-            if($entity->getName() == $name) {
-                $domain = $entity;
-                break;
-            }
+            $qb->orderBy($sortColumns[$sort->property], $sort->direction);
         }
 
-        if(is_null($domain)) {
-            $domain = $this->findOneBy(array('name' => $name));
-
-            if (!$domain) {
-                $domain = new Domain();
-                $domain->setName($name);
-            }
-
-            $this->getEntityManager()->persist($domain);
-        }
-
-        return $domain;
+        return $qb->getQuery()->getResult();
     }
 
     /**
-     * @return Domain[]
+     * @param string $search
+     *
+     * @return int
      */
-    protected function getUnManagedEntities()
+    public function getCount($search = '')
     {
-        return array_filter($this->getEntityManager()->getUnitOfWork()->getScheduledEntityInsertions(), function ($e) {
-            return ($e instanceof Domain);
-        });
+        return count($this->getList($search));
     }
 }

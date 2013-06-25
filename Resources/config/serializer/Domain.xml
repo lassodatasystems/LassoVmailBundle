@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serializer>
+    <class name="Lasso\VmailBundle\Entity\Domain" exclusion-policy="ALL"
+           accessor-order="custom" custom-accessor-order="id,name,local">
+        <property name="id"
+                  expose="true"
+                  type="integer"
+                  accessor-getter="getId"
+                  since-version="1.0"/>
+        <property name="name"
+                  expose="true"
+                  type="string"
+                  since-version="1.0"/>
+        <property name="local"
+                  expose="true"
+                  type="integer"
+                  accessor-getter="isLocalDomain"
+                  since-version="1.0"/>
+    </class>
+</serializer>
