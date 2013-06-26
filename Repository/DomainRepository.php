@@ -54,4 +54,19 @@ class DomainRepository extends EntityRepository
     {
         return count($this->getList($search));
     }
+
+    /**
+     * @param string $name
+     *
+     * @return Domain
+     */
+    public function getDomain($name)
+    {
+        $domain = $this->findOneBy(array('name' => $name));
+        if (!$domain) {
+            $domain = new Domain();
+            $domain->setName($name);
+        }
+        return $domain;
+    }
 }

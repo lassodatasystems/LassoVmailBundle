@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 class LocalDomain
 {
     /**
-     * @var integer
+     * @var Domain
      */
-    private $domain = '';
+    private $domain;
 
     /**
      * @var integer
