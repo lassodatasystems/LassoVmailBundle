@@ -2,7 +2,6 @@
 
 namespace Lasso\VmailBundle;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use FilesystemIterator;
@@ -53,8 +52,9 @@ class MailboxManager
 
     /**
      * @var integer
+     * 2147483648 KB = 2 GB
      */
-    private $defaultQuota = 0;
+    private $defaultQuota = 2147483648;
 
     /**
      * @var string
@@ -79,7 +79,7 @@ class MailboxManager
                                 EmailRepository $emailRepository,
                                 MailboxRepository $mailboxRepository,
                                 Logger $logger,
-                                $defaultQuota = 0,
+                                $defaultQuota = 2147483648,
                                 $rootMailDir = '')
     {
         $this->em                = $em;
