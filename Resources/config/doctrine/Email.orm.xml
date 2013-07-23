@@ -16,9 +16,7 @@
       <cascade>
         <cascade-persist/>
       </cascade>
-      <join-columns>
-        <join-column name="domain" referenced-column-name="id"/>
-      </join-columns>
+      <join-column name="domain" referenced-column-name="id"/>
     </many-to-one>
   </entity>
 </doctrine-mapping>

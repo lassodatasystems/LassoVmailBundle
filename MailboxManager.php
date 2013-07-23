@@ -54,7 +54,7 @@ class MailboxManager
     /**
      * @var integer
      */
-    private $defaultQuota = 0;
+    private $defaultQuota = 2147483648;
 
     /**
      * @var string
@@ -79,7 +79,7 @@ class MailboxManager
                                 EmailRepository $emailRepository,
                                 MailboxRepository $mailboxRepository,
                                 Logger $logger,
-                                $defaultQuota = 0,
+                                $defaultQuota = 2147483648,
                                 $rootMailDir = '')
     {
         $this->em                = $em;

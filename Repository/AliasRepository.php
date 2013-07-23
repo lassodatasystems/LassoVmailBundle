@@ -2,6 +2,7 @@
 
 namespace Lasso\VmailBundle\Repository;
 
+use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Lasso\VmailBundle\Entity\Alias;
 use Lasso\VmailBundle\Entity\Email;
@@ -20,7 +21,7 @@ class AliasRepository extends EntityRepository
      */
     public function getAlias(Email $source, Email $destination)
     {
-        $alias = $this->findOneBy(array('source' => $source->getEmail(), 'destination' => $destination->getEmail()));
+        $alias = $this->findOneBy(array('source' => $source->getId(), 'destination' => $destination->getId()));
         if (!$alias) {
             $alias = new Alias();
             $alias->setSource($source);
