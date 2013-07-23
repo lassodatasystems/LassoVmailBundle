@@ -2,7 +2,6 @@
 
 namespace Lasso\VmailBundle;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use FilesystemIterator;
