@@ -2,7 +2,6 @@
 
 namespace Lasso\VmailBundle\Repository;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Lasso\VmailBundle\Entity\Alias;
 use Lasso\VmailBundle\Entity\Email;
