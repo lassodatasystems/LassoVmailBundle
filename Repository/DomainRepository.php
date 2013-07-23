@@ -35,7 +35,8 @@ class DomainRepository extends EntityRepository
             $qb->setMaxResults($limit);
         }
         if (!empty($sort->property)) {
-            $sortColumns = ['domain'=> 'd.name',
+            $sortColumns = ['name'  => 'd.name',
+                            'local' => 'l.id',
                             'id'    => 'd.id'
             ];
 
@@ -64,14 +65,14 @@ class DomainRepository extends EntityRepository
     {
         $domain = null;
 
-        foreach($this->getUnManagedEntities() as $entity) {
-            if($entity->getName() == $name) {
+        foreach ($this->getUnManagedEntities() as $entity) {
+            if ($entity->getName() == $name) {
                 $domain = $entity;
                 break;
             }
         }
 
-        if(is_null($domain)) {
+        if (is_null($domain)) {
             $domain = $this->findOneBy(array('name' => $name));
 
             if (!$domain) {
