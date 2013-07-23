@@ -30,6 +30,9 @@ trait CGetActionTrait {
      */
     abstract public function get($id);
 
+    /**
+     * @return Response
+     */
     public function cgetAction(){
         $request = $this->getRequest();
         $offset  = $request->query->get('start');

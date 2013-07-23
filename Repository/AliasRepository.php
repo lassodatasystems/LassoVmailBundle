@@ -20,7 +20,7 @@ class AliasRepository extends EntityRepository
      */
     public function getAlias(Email $source, Email $destination)
     {
-        $alias = $this->findOneBy(array('source' => $source->getEmail(), 'destination' => $destination->getEmail()));
+        $alias = $this->findOneBy(array('source' => $source->getId(), 'destination' => $destination->getId()));
         if (!$alias) {
             $alias = new Alias();
             $alias->setSource($source);
