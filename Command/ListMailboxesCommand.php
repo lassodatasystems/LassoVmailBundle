@@ -33,10 +33,10 @@ class ListMailboxesCommand extends ContainerAwareCommand
     {
         /** @var $mailboxRepository MailboxRepository */
         $mailboxRepository = $this->getContainer()->get('lasso_vmail.mailbox_repository');
-        $mailboxes         = $mailboxRepository->getMailboxes($input->getArgument('username'));
+        $mailboxes         = $mailboxRepository->findAll($input->getArgument('username'));
 
         foreach ($mailboxes as $mailbox) {
-            $output->writeln("<info>{$mailbox->getUsername()}</info>");
+            $output->writeln($mailbox->getUsername());
         }
     }
 }
