@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "stof/doctrine-extensions-bundle": "dev-master"
+        "stof/doctrine-extensions-bundle": "v1.1.0"
     },
     "autoload": {
         "psr-0": { "Lasso\\VmailBundle": "" }
