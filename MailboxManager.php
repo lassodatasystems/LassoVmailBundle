@@ -147,7 +147,7 @@ class MailboxManager
      *
      * updates a users mail quota, quota passed is expected in GB
      *
-     * @throws VmailException
+     * @return bool
      */
     public function updateQuota($username, $quota)
     {
@@ -157,9 +157,9 @@ class MailboxManager
             $mailbox->setQuota(($quota * pow(1024, 3))); //convert to bytes from GB
             $this->em->persist($mailbox);
             $this->em->flush();
-
+            return true;
         } else {
-            throw VmailException::userNotFound($username);
+            return false;
         }
     }
 
@@ -168,7 +168,7 @@ class MailboxManager
      * @param        $password
      * @param bool   $hash
      *
-     * @throws VmailException
+     * @return bool
      * updates a users password with a new password
      *
      */
@@ -181,16 +181,16 @@ class MailboxManager
             $mailbox->setPassword($password); //must be a valid hash
             $this->em->persist($mailbox);
             $this->em->flush();
-
+            return true;
         } else {
-            throw VmailException::userNotFound($username);
+            return false;
         }
     }
 
     /**
      * @param $username
      *
-     * @throws VmailException
+     * @return bool
      */
     public function deleteMailbox($username)
     {
@@ -201,9 +201,9 @@ class MailboxManager
             $this->em->remove($mailbox->getEmail());
             $this->em->remove($mailbox);
             $this->em->flush();
-
+            return true;
         } else {
-            throw VmailException::userNotFound($username);
+            return false;
         }
     }
 
