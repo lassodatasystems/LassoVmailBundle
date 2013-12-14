@@ -298,8 +298,6 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
 
         $username = 'travis';
 
-        $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
-
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManager', ['persist', 'flush'], [], '', false);
 
         $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
@@ -312,7 +310,7 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('\Monolog\Logger', [], [], '', false);
 
         $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger);
-        $mailboxManager->updateQuota($username, '2');
+        $this->assertFalse($mailboxManager->updateQuota($username, '2'));
     }
 
 
@@ -321,10 +319,7 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
      */
     public function updatePasswordWithNonExistentUser()
     {
-
         $username = 'travis';
-
-        $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
 
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManager', ['persist', 'flush'], [], '', false);
         $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
@@ -337,7 +332,7 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('\Monolog\Logger', [], [], '', false);
 
         $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger);
-        $mailboxManager->updatePassword($username, 'test');
+        $this->assertFalse($mailboxManager->updatePassword($username, 'test'));
     }
 
     /**
@@ -391,8 +386,6 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
      */
     public function deleteMailboxWhenUserNotFound()
     {
-        $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
-
         $mockEm = $this->getMock('\Doctrine\ORM\EntityManager', ['remove', 'flush'], [], '', false);
         $mockAliasManager = $this->getMock('Lasso\VmailBundle\AliasManager', [], [], '', false);
         $mockDomainRepo   = $this->getMock('\Lasso\VmailBundle\Repository\DomainRepository', [], [], '', false);
@@ -404,6 +397,6 @@ class MailboxManagerTest extends PHPUnit_Framework_TestCase
         $mockLogger = $this->getMock('\Monolog\Logger', [], [], '', false);
 
         $mailboxManager = new MailboxManager($mockEm, $mockAliasManager, $mockDomainRepo, $mockEmailRepo, $mockMailboxRepo, $mockLogger);
-        $mailboxManager->deleteMailbox('travis');
+        $this->assertFalse($mailboxManager->deleteMailbox('travis'));
     }
 }
