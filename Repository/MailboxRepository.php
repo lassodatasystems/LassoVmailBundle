@@ -35,7 +35,7 @@ class MailboxRepository extends EntityRepository
      */
     private function validateUserName($username)
     {
-        if (strlen($username) <= 3) {
+        if (strlen($username) < 3) {
             throw VmailException::invalidUsername($username);
         }
     }
