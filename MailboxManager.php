@@ -16,6 +16,7 @@ use RecursiveIteratorIterator;
 
 /**
  * Class MailboxManager
+ *
  * @package Lasso\VmailBundle
  */
 class MailboxManager
@@ -67,10 +68,8 @@ class MailboxManager
      * @param EmailRepository   $emailRepository
      * @param MailboxRepository $mailboxRepository
      * @param Logger            $logger
-     * @param                   $defaultQuota
-     * @param                   $rootMailDir
-     *
-     * @internal param MailboxManager $mailboxFactory
+     * @param int               $defaultQuota
+     * @param string            $rootMailDir
      */
     public function __construct(EntityManager $em,
                                 AliasManager $aliasManager,
@@ -157,6 +156,7 @@ class MailboxManager
             $mailbox->setQuota(($quota * pow(1024, 3))); //convert to bytes from GB
             $this->em->persist($mailbox);
             $this->em->flush();
+
             return true;
         } else {
             return false;
@@ -165,7 +165,7 @@ class MailboxManager
 
     /**
      * @param string $username
-     * @param        $password
+     * @param string $password
      * @param bool   $hash
      *
      * @return bool
@@ -181,6 +181,7 @@ class MailboxManager
             $mailbox->setPassword($password); //must be a valid hash
             $this->em->persist($mailbox);
             $this->em->flush();
+
             return true;
         } else {
             return false;
@@ -188,7 +189,7 @@ class MailboxManager
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return bool
      */
@@ -201,6 +202,7 @@ class MailboxManager
             $this->em->remove($mailbox->getEmail());
             $this->em->remove($mailbox);
             $this->em->flush();
+
             return true;
         } else {
             return false;
@@ -279,7 +281,7 @@ class MailboxManager
     }
 
     /**
-     * @param $hash
+     * @param string $hash
      *
      * @return bool
      */
@@ -289,7 +291,7 @@ class MailboxManager
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return bool
      */

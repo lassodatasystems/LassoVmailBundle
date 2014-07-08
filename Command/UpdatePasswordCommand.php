@@ -11,12 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class UpdateQuotaCommand
+ *
  * @package Lasso\VmailBundle\Command
  */
-class UpdatePasswordCommand extends ContainerAwareCommand {
+class UpdatePasswordCommand extends ContainerAwareCommand
+{
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {

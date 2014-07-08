@@ -10,12 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class UpdateQuotaCommand
+ *
  * @package Lasso\VmailBundle\Command
  */
-class UpdateQuotaCommand extends ContainerAwareCommand {
+class UpdateQuotaCommand extends ContainerAwareCommand
+{
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {
@@ -30,12 +32,15 @@ class UpdateQuotaCommand extends ContainerAwareCommand {
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return mixed
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var $mailboxManager MailboxManager */
         $mailboxManager = $this->getContainer()->get('lasso_vmail.mailbox_manager');
+
         return $mailboxManager->updateQuota($input->getArgument('username'), $input->getArgument('quota'));
     }
 }

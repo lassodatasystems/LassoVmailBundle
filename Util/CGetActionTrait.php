@@ -33,7 +33,8 @@ trait CGetActionTrait {
     /**
      * @return Response
      */
-    public function cgetAction(){
+    public function cgetAction()
+    {
         $request = $this->getRequest();
         $offset  = $request->query->get('start');
         $limit   = $request->query->get('limit');

@@ -11,13 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CreateMailCommand
+ *
  * @package Lasso\VmailBundle\Command
  */
 class CreateAliasCommand extends ContainerAwareCommand
 {
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {
@@ -32,6 +33,8 @@ class CreateAliasCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return mixed
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,6 +42,7 @@ class CreateAliasCommand extends ContainerAwareCommand
         /** @var $aliasManager AliasManager */
         $aliasManager = $this->getContainer()->get('lasso_vmail.alias_manager');
         $alias = $aliasManager->createAlias($input->getArgument('source'), $input->getArgument('destination'));
+
         return $alias ? 0 : 1;
     }
 }

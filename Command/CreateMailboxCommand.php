@@ -11,13 +11,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class CreateMailCommand
+ *
  * @package Lasso\VmailBundle\Command
  */
 class CreateMailboxCommand extends ContainerAwareCommand
 {
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {

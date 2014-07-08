@@ -45,7 +45,7 @@ class VmailException extends Exception
     const ERROR_EMAIL_NOT_FOUND = 9;
 
     /**
-     * @param $email
+     * @param string $email
      *
      * @return VmailException
      */
@@ -65,7 +65,7 @@ class VmailException extends Exception
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return VmailException
      */

@@ -9,11 +9,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class ListMailboxesCommand
+ *
+ * @package Lasso\VmailBundle\Command
+ */
 class ListMailboxesCommand extends ContainerAwareCommand
 {
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {

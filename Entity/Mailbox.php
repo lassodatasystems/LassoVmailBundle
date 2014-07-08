@@ -136,7 +136,7 @@ class Mailbox
      */
     public function setQuota($quota)
     {
-        if($quota){
+        if ($quota) {
             $this->quota = $quota;
         }
 

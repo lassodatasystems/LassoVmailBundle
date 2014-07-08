@@ -8,6 +8,11 @@ use Lasso\VmailBundle\MailboxManager;
 use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStream;
 
+/**
+ * Class MailboxManagerTest
+ *
+ * @package Lasso\VmailBundle\Unit\Tests
+ */
 class MailboxManagerTest extends PHPUnit_Framework_TestCase
 {
 

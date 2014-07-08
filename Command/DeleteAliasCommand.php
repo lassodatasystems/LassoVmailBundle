@@ -8,10 +8,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DeleteAliasCommand extends ContainerAwareCommand {
+/**
+ * Class DeleteAliasCommand
+ *
+ * @package Lasso\VmailBundle\Command
+ */
+class DeleteAliasCommand extends ContainerAwareCommand
+{
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {

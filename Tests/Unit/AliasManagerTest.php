@@ -10,6 +10,11 @@ use Lasso\VmailBundle\Exception\VmailException;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Class AliasManagerTest
+ *
+ * @package Lasso\VmailBundle\Tests\Unit
+ */
 class AliasManagerTest extends PHPUnit_Framework_TestCase
 {
 
@@ -140,7 +145,7 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
 
         $mockEntityManger = $this->getMock('Doctrine\ORM\EntityManager', [], [], '', false);
 
-        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy','getAlias', 'aliasExists'], [], '', false);
+        $mockAliasRepo = $this->getMock('Lasso\VmailBundle\Repository\AliasRepository', ['findBy', 'getAlias', 'aliasExists'], [], '', false);
         $mockAliasRepo->expects($this->once())
             ->method('findBy')
             ->will($this->returnValue([]));
@@ -212,7 +217,8 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function deleteAlias(){
+    public function deleteAlias()
+    {
 
         $email1 = 'travis@test.com';
         $email2 = 'hawk@test.com';
@@ -248,7 +254,8 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function deleteAliasForNonExistentSource(){
+    public function deleteAliasForNonExistentSource()
+    {
 
         $this->setExpectedException('\Lasso\VmailBundle\Exception\VmailException');
 
@@ -269,7 +276,8 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function deleteAliasForNonExistentDestination(){
+    public function deleteAliasForNonExistentDestination()
+    {
 
         $mockEmail = $this->mockEmail('hawk@test.com', 1, 0, 0, 0);
 
@@ -290,10 +298,14 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $name
+     * @param string $email
      * @param int    $id
+     * @param int    $expectedEmailCalls
+     * @param int    $expectedDomainCalls
+     * @param int    $expectedIdCalls
      * @param Domain $domain
      *
+     * @internal param string $name
      * @return Email|PHPUnit_Framework_MockObject_MockObject
      */
     private function mockEmail(
@@ -304,8 +316,8 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
         $expectedIdCalls = 1,
         $domain = null)
     {
-        if(is_null($domain)) {
-            $domain = $this->mockDomain('test.com');
+        if (is_null($domain)) {
+            $domain = $this->getMock('Lasso\VmailBundle\Entity\Domain');
         }
 
         $mockEmail = $this->getMock('Lasso\VmailBundle\Entity\Email', ['getDomain', 'getId', 'getEmail']);
@@ -320,14 +332,5 @@ class AliasManagerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($id));
 
         return $mockEmail;
-    }
-
-    /**
-     * @param $domain
-     *
-     * @return Domain|PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockDomain($domain) {
-        return $this->getMock('Lasso\VmailBundle\Entity\Domain');
     }
 }

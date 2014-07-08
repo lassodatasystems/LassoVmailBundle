@@ -8,15 +8,17 @@ use Lasso\VmailBundle\Exception\VmailException;
 
 /**
  * Class MailboxRepository
+ *
  * @package Lasso\VmailBundle\Repository
  */
 class MailboxRepository extends EntityRepository
 {
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return Mailbox
+     * @throws VmailException
      */
     public function getMailbox($username)
     {
@@ -29,7 +31,7 @@ class MailboxRepository extends EntityRepository
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @throws VmailException
      */
@@ -44,6 +46,7 @@ class MailboxRepository extends EntityRepository
      * @param string $search
      * @param bool   $limit
      * @param bool   $offset
+     * @param array  $sort
      *
      * @return Mailbox[]
      */

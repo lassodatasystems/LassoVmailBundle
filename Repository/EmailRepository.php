@@ -6,19 +6,22 @@ use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Lasso\VmailBundle\Entity\Domain;
 use Lasso\VmailBundle\Entity\Email;
+use Lasso\VmailBundle\Exception\VmailException;
 use Lasso\VmailBundle\Util\EmailParser;
 
 /**
  * Class EmailRepository
+ *
  * @package Lasso\VmailBundle\Repository
  */
 class EmailRepository extends EntityRepository
 {
 
     /**
-     * @param string Email
+     * @param string $emailString
      *
-     * @return Email
+     * @return Email|null|object
+     * @throws VmailException
      */
     public function getEmail($emailString)
     {
@@ -50,8 +53,8 @@ class EmailRepository extends EntityRepository
      */
     protected function getUnManagedEntities()
     {
-        return array_filter($this->getEntityManager()->getUnitOfWork()->getScheduledEntityInsertions(), function ($e) {
-            return ($e instanceof Email);
+        return array_filter($this->getEntityManager()->getUnitOfWork()->getScheduledEntityInsertions(), function ($entity) {
+            return ($entity instanceof Email);
         });
     }
 

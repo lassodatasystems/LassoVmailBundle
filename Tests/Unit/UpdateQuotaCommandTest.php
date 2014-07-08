@@ -6,10 +6,16 @@ use Lasso\VmailBundle\Command\UpdateQuotaCommand;
 use Lasso\VmailBundle\Tests\CommandTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Class UpdateQuotaCommandTest
+ *
+ * @package Lasso\VmailBundle\Tests\Unit
+ */
 class UpdateQuotaCommandTest extends CommandTestCase
 {
 
     /**
+     * @todo: complete test
      */
     public function updateValidUsersQuota()
     {

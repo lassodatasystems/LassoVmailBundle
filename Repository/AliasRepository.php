@@ -8,6 +8,7 @@ use Lasso\VmailBundle\Entity\Email;
 
 /**
  * Class AliasRepository
+ *
  * @package Lasso\VmailBundle\Repository
  */
 class AliasRepository extends EntityRepository

@@ -17,6 +17,8 @@ trait AccessorTest
      * @param null  $proxiedClass
      * @param bool  $debug Use this flag to display a list of class methods not covered by this test
      *
+     * @SuppressWarnings(PHPMD.ConstructorWithNameAsEnclosingClass)
+     *
      * @return void
      */
     protected function accessorTest($object, $ignoredMethods = array(), $proxiedClass = null, $debug = false)
@@ -118,8 +120,7 @@ trait AccessorTest
                 if ($class->isInstantiable()) {
                     try {
                         $value = $class->newInstance();
-                    }
-                    catch(ReflectionException $e) {
+                    } catch (ReflectionException $e) {
 
                     }
                 }
