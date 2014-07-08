@@ -8,10 +8,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DeleteMailboxCommand extends ContainerAwareCommand {
+/**
+ * Class DeleteMailboxCommand
+ *
+ * @package Lasso\VmailBundle\Command
+ */
+class DeleteMailboxCommand extends ContainerAwareCommand
+{
 
     /**
-     *
+     * Configuration
      */
     protected function configure()
     {

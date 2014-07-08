@@ -182,7 +182,7 @@ class Domain
      */
     public function setLocalDomain(LocalDomain $local = null)
     {
-        if(!empty($local)){
+        if (!empty($local)) {
             $local->setDomain($this);
         }
         $this->local = $local;
@@ -203,7 +203,8 @@ class Domain
      *
      * check to see if this domain has a local domain entry
      */
-    public function isLocalDomain(){
+    public function isLocalDomain()
+    {
         return !is_null($this->getLocalDomain());
     }
 }

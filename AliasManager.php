@@ -16,6 +16,7 @@ use Monolog\Logger;
 
 /**
  * Class AliasManager
+ *
  * @package Lasso\VmailBundle
  */
 class AliasManager
@@ -42,8 +43,8 @@ class AliasManager
     }
 
     /**
-     * @param $sourceString
-     * @param $destinationString
+     * @param string $sourceString
+     * @param string $destinationString
      *
      * @throws VmailException
      * @throws Exception
@@ -94,10 +95,12 @@ class AliasManager
      */
     private function needsAliasCycleCheck(Email $source, Email $destination)
     {
-        if (is_null($source->getId()) || is_null($destination->getId())) { // new email don't need to be checked
+        if (is_null($source->getId()) || is_null($destination->getId())) {
+            // new email don't need to be checked
             return false;
         }
-        if ($source->getEmail() == $destination->getEmail()) { // an alias loop is valid if it points directly to itself
+        if ($source->getEmail() == $destination->getEmail()) {
+            // an alias loop is valid if it points directly to itself
             return false;
         }
 
@@ -119,12 +122,15 @@ class AliasManager
         /** @var Alias[] $aliases */
         $aliases = $this->aliasRepository->findBy(array('source' => $destination));
         foreach ($aliases as $alias) {
-            if ($alias->getSource()->getId() == $alias->getDestination()->getId()) { // continue if alias is self referencing to prevent infinite loop
+            if ($alias->getSource()->getId() == $alias->getDestination()->getId()) {
+                // continue if alias is self referencing to prevent infinite loop
                 continue;
-            } else if ($alias->getDestination()->getEmail() == $source->getEmail()) { // compare to start of traversal
+            } else if ($alias->getDestination()->getEmail() == $source->getEmail()) {
+                // compare to start of traversal
                 return true;
             } else {
-                return $this->hasStronglyConnectedComponents($source, $alias->getDestination()); // continue traversing
+                // continue traversing
+                return $this->hasStronglyConnectedComponents($source, $alias->getDestination());
             }
         }
 

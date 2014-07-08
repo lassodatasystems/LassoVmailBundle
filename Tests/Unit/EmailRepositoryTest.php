@@ -5,6 +5,11 @@ namespace Lasso\VmailBundle\Tests\Unit;
 use Lasso\VmailBundle\Entity\Email;
 use PHPUnit_Framework_TestCase;
 
+/**
+ * Class EmailRepositoryTest
+ *
+ * @package Lasso\VmailBundle\Tests\Unit
+ */
 class EmailRepositoryTest extends PHPUnit_Framework_TestCase
 {
 

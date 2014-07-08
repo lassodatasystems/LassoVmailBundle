@@ -5,15 +5,12 @@ namespace Lasso\VmailBundle\Exception;
 use Lasso\VmailBundle\Exception\VmailException;
 
 /**
- * VmailEmailOrAliasExistsException exception class
+ * Class VmailEmailOrAliasExistsException
+ *
+ * @package Lasso\VmailBundle\Exception
  */
 class VmailEmailOrAliasExistsException extends VmailException
 {
-    /**
-     * Error code for email exists
-     */
-    const ERROR_EMAIL_EXISTS = 3;
-
     /**
      * Error code for invalid username
      */
@@ -45,7 +42,7 @@ class VmailEmailOrAliasExistsException extends VmailException
     const ERROR_EMAIL_NOT_FOUND = 9;
 
     /**
-     * @param $email
+     * @param string $email
      *
      * @return VmailException
      */
@@ -65,7 +62,7 @@ class VmailEmailOrAliasExistsException extends VmailException
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return VmailException
      */

@@ -7,7 +7,8 @@ use Doctrine\ORM\EntityRepository;
 use Lasso\VmailBundle\Entity\Domain;
 
 /**
- * Class DomainRepository
+ * Class DomainRepositoryo
+ *
  * @package Lasso\VmailBundle\Repository
  */
 class DomainRepository extends EntityRepository
