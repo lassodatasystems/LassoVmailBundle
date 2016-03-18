@@ -3,3 +3,6 @@ php:
     - 5.4
 
 script: phpunit .
+
+notifications:
+  slack: ***REMOVED***
